@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 2.8)
+project( DisplayImage )
+include_directories(./)
+set(CMAKE_CXX_STANDARD 11)
+find_package( OpenCV REQUIRED )
+add_executable( dnntest test.cpp )
+target_link_libraries( dnntest ${OpenCV_LIBS} )
