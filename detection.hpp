@@ -28,7 +28,7 @@ struct hash<Detection>{
       // second and third and combine them using XOR
       // and bit shifting:
       return (((hash<int>()(d.classId) ^ (hash<float>()(d.confidence) << 1)) >> 1) ^ 
-      ((hash<int>()(d.bbox.x)) ^ (hash<int>()(d.bbox.y)) ^ 
+      (((hash<int>()(d.bbox.x)) ^ (hash<int>()(d.bbox.y)) <<1) ^ 
       (hash<int>()(d.bbox.height)) ^ (hash<int>()(d.bbox.width))) >> 1);
     }
 };

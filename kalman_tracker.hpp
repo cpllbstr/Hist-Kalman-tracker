@@ -39,9 +39,9 @@ class Track {
     int maxlen;
     int nomatch, maxnomatch;
     int id;
+    bool updated;
     unique_ptr<list<Point2d>> Points;
     Mat prev_hist;
-
     void Update(Point2d b, int64 dt) {
         kf.correct((Mat_<float>(2,1) << b.x, b.y)); 
         kf.transitionMatrix.at<float>(0,2) = dt; 
@@ -62,13 +62,13 @@ class Track {
         if (Points->size()>maxlen)
             Points->pop_back();
     };
-    // Track(Detection det, int maxl = 15, int maxm = 10): maxlen(maxl), maxnomatch(maxm) {
-        // auto b = det.get_center();
-        // id = ++id_n;
-        // initKalman();
-        // kf.statePost = Mat_<float>(4,1) << b.x, b.y, 0., 0.;
-        // Points->push_front(b);
-    // }
+    Track(Detection det, int maxl = 15, int maxm = 10): maxlen(maxl), maxnomatch(maxm) {
+        auto b = det.get_center();
+        id = ++id_n;
+        initKalman();
+        kf.statePost = Mat_<float>(4,1) << b.x, b.y, 0., 0.;
+        Points->push_front(b);
+    }
     ~Track() {
     }
 };
@@ -81,6 +81,7 @@ class KalmanTracker{
     public:
     int maxNoMatch;
     int maxBlobs;
+    // @TODO: Treshold distance from state params
     float tresholdDist;
     list<Track> Tracks;
     
@@ -106,34 +107,57 @@ void KalmanTracker::Update(list<Detection> dets, Mat &img, int64 dt) {
         this->Register(move(dets));
         return;
     }
-    unordered_map<Detection, Mat> histMap;
-    // for(auto& det: dets) {
-        // auto minDist = this->tresholdDist;
-        // auto bestCand = this->Tracks.end();
-        // for(auto trit = this->Tracks.begin();trit!=this->Tracks.end(); trit++){
-            // if (det.classId != trit->classId) 
-                // continue;
-            // if (dist<minDist) {
-                // bestCand = trit;
-                // minDist = dist;
-            // }
-        // }
-        // if (bestCand != this->Tracks.end()) {
-            // bestCand->Update(det, );
-            // bestCand->nomatch = 0;
-            // det.exist = true;
-        // } 
-    // }
-
+    unique_ptr<unordered_map<Detection, Mat>> histMap;
+    /* for(auto& det: dets) {
+        auto minDist = this->tresholdDist;
+        auto bestCand = this->Tracks.end();
+        for(auto trit = this->Tracks.begin();trit!=this->Tracks.end(); trit++){
+            if (det.classId != trit->classId) 
+                continue;
+            if (dist<minDist) {
+                bestCand = trit;
+                minDist = dist;
+            }
+        }
+        if (bestCand != this->Tracks.end()) {
+            bestCand->Update(det, );
+            bestCand->nomatch = 0;
+            det.exist = true;
+        } 
+    } */
     for (auto &tr : this->Tracks) {
         auto track_p = tr.Points->front();
+        auto best_hist_score = 0;
+        Detection *best_det;
         for (auto& d: dets) {
-            auto dist = dst(track_p, d.get_center());
+            if (dst(track_p, d.get_center()) <= this->tresholdDist) {
+                if (histMap->find(d) == histMap->end()) {
+                    (*histMap)[d] = calcHistRGB(img(d.bbox));
+                }
+                auto hist_score = compareHist(tr.prev_hist, (*histMap)[d], HISTCMP_INTERSECT);
+                if (hist_score > best_hist_score) {
+                    best_hist_score = hist_score;
+                    best_det = &d;
+                }
+            }
+        }
+        if (best_det->bbox.area() > 0 ){
+            best_det->registered = true;
+            tr.Update(best_det->get_center(), dt);
+        } else {
+            tr.Update(dt);
         }
 
+        //Register far detections
+        for (auto &d: dets) {   
+            if (!d.registered) {
+                this->Register({d});
+            } else {
+                d.registered =false;
+            }
+        }
     }
-
-}  
+}
 
 Mat calcHistRGB(Mat img) {
     MatND hist;
