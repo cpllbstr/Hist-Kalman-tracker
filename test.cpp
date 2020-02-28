@@ -64,7 +64,7 @@ int main(int argc, char const *argv[]) {
     G.setTo(Green);
     Mat R  = Mat::zeros(100, 100, CV_32FC3);
     R.setTo(Red);
-    Mat img  = Mat::zeros(1024, 1024, CV_32FC3);
+    Mat img  = Mat::zeros(1024, 1024, CV_8UC3);
     auto detect = []() {return tuple<int, int>(10 + sin(getTickCount()), 10 + cos(getTickCount()));};
     Detection det;
     det.bbox = Rect(0,0,10,10);
@@ -74,6 +74,7 @@ int main(int argc, char const *argv[]) {
         ktr.Update({det}, img, 1);
         det.bbox.x+=dx;
         det.bbox.y+=dy;
+        cout << det.bbox << endl;
     } 
     for(auto p: ktr.Tracks.front().Points) {
         cout << p << endl; 

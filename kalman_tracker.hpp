@@ -31,7 +31,9 @@ class Track {
         // setIdentity(this->kf.errorCovPost, Scalar::all(1e-2));
     }
     Point2d statetoPoint2d(Mat st) {
-        return Point2d(st.data[0], st.data[1]);
+        cout<< st << endl;
+        cout << st.at<float>(0) << st.at<float>(1) << endl;
+        return Point2i(int(st.at<float>(0)), int(st.at<float>(1)));
     };
 
     public:
@@ -52,13 +54,14 @@ class Track {
 
         auto b = d.get_center();
         Mat meas = (Mat_<float>(2,1) << b.x, b.y);
-        cout << kf.measurementMatrix; 
+        // cout << kf.measurementMatrix; 
         // cout<< " here we go"<< endl << endl;
         kf.correct(meas); 
         // cout<<  " again" << endl;
         kf.transitionMatrix.at<float>(0,2) = dt; 
         kf.transitionMatrix.at<float>(1,3) = dt;
         kf.predict();
+        cout << kf.statePost << endl;
         Points.push_front(statetoPoint2d(kf.statePost));
         if (Points.size()>maxlen)
             Points.pop_back();
@@ -87,21 +90,23 @@ class Track {
         // [ 0 1  0 dT ]
         // [ 0 0  1  0 ]
         // [ 0 0  0  1 ]
-        setIdentity(this->kf.transitionMatrix);
+        setIdentity(kf.transitionMatrix);
         // Measure Matrix H
         // [ 1 0 ]
         // [ 0 1 ]
-        setIdentity(this->kf.measurementMatrix); 
+        setIdentity(kf.measurementMatrix); 
         // Process Noise Covariance Matrix Q
         // [ Ex   0   0     0    ]
         // [ 0    Ey  0     0    ]
         // [ 0    0   Ev_x  0    ]
         // [ 0    0   0     Ev_y ]
-        setIdentity(this->kf.processNoiseCov, cv::Scalar(1e-5));
+        setIdentity(kf.processNoiseCov, cv::Scalar(1e-5));
         // Measures Noise Covariance Matrix R
-        setIdentity(this->kf.measurementNoiseCov, cv::Scalar(1e-2));
+        setIdentity(kf.measurementNoiseCov, cv::Scalar(1e-2));
         // initKalman();
         kf.statePost = Mat_<float>(4,1) << b.x, b.y, 0., 0.;
+        kf.statePre = kf.statePost;
+        cout << kf.transitionMatrix << endl;
         Points.push_back(b);
     }
     bool operator==(const Track& b) {
