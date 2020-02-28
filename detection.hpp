@@ -7,7 +7,7 @@ struct Detection {
     int classId;
     float confidence;
     Rect bbox;
-    bool registered =  false;
+    bool appended =  false;
     Point2d get_center() {
        return Point(bbox.x+int(bbox.width/2), bbox.y+int(bbox.height/2));
     };
