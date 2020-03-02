@@ -65,23 +65,48 @@ int main(int argc, char const *argv[]) {
     Mat R  = Mat::zeros(100, 100, CV_32FC3);
     R.setTo(Red);
     Mat img  = Mat::zeros(1024, 1024, CV_8UC3);
-    auto detect = []() {return tuple<int, int>(10 + sin(getTickCount()), 10 + cos(getTickCount()));};
-    Detection det;
-    det.bbox = Rect(0,0,10,10);
-    KalmanTracker ktr;
-    for (int i =0; i<10; i++){
+    Mat img2  = Mat::zeros(1024, 1024, CV_8UC3);
+    auto detect = []() {return tuple<int, int>(10 + 5*sin(getTickCount()), 10 + 5*cos(getTickCount()));};
+    Detection det1;
+    Detection det2;
+
+    det1.bbox = Rect(0,0,50,50);
+    det2.bbox = Rect(1000,1000,50,50);
+
+    KalmanTracker ktr(5, 100);
+    Point prev1= det1.get_center();
+    Point prev2= det2.get_center();
+
+    for (int i=0; i<100; i++){
+        Mat bf(img);
         auto[dx, dy] = detect();
-        ktr.Update({det}, img, 1);
-        det.bbox.x+=dx;
-        det.bbox.y+=dy;
-        cout << det.bbox << endl;
+        det1.bbox.x+=dx;
+        det1.bbox.y+=dy;
+        det2.bbox.x-=dx;
+        det2.bbox.y-=dy;
+        try {
+            bf(det1.bbox).setTo(Green);
+            bf(det2.bbox).setTo(Red);
+        } catch(...) {
+            cerr << "BBOX out of image!"<<endl;
+            // waitKey(0);
+            continue;
+        }
+        ktr.Update({det1, det2}, bf, 10);
+        line(img2,prev1, det1.get_center(), CV_RGB(0, 255, 0), 1);
+        circle(img2, det1.get_center(), 2, CV_RGB(255, 211, 0), 2);
+        line(img2,prev2, det2.get_center(), CV_RGB(0, 255, 0), 1);
+        circle(img2, det2.get_center(), 2, CV_RGB(255, 211, 0), 2);
+        prev1 = det1.get_center();
+        prev2 = det2.get_center();
+        
+        // cout <<"bbox:" << det.bbox << endl;
     } 
-    for(auto p: ktr.Tracks.front().Points) {
-        cout << p << endl; 
-    }
-    cout << ktr.Tracks.size() << endl;
-    ktr.DrawCV(img);
-    imshow("im",img);
+    // for(auto p: ktr.Tracks) {
+        // cout << p.Points.size() << " " << p.Points.front() << endl; 
+    // }
+    ktr.DrawCV(img2);
+    imshow("im",img2);
     waitKey(0);
 
 }

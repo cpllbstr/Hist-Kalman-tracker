@@ -175,7 +175,7 @@ int main(int argc, char** argv)
     // Create a window
     static const string kWinName = "Deep learning object detection in OpenCV";
     namedWindow(kWinName, WINDOW_NORMAL);
-
+    KalmanTracker ktr;
     // Process frames.
     while (waitKey(1) < 0)
     {
@@ -202,11 +202,11 @@ int main(int argc, char** argv)
         cout << "Time on forwarding: " << duration.count() << endl;
         // Remove the bounding boxes with low confidence
         auto dets = postprocess(frame, outs);
-        
         // Put efficiency information. The function getPerfProfile returns the overall time for inference(t) and the timings for each of the layers(in layersTimes)
         vector<double> layersTimes;
         double freq = getTickFrequency() / 1000;
         double t = net.getPerfProfile(layersTimes) / freq;
+        ktr.Update(dets, int(t));
         string label = format("Inference time for a frame : %.2f ms", t);
         putText(frame, label, Point(0, 15), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0, 0, 255));
         
