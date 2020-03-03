@@ -53,7 +53,7 @@ void drawPred(int classId, float conf, int left, int top, int right, int bottom,
 vector<String> getOutputsNames(const Net& net);
 
 // Remove the bounding boxes with low confidence using non-maxima suppression
-auto postprocess(Mat& frame, const vector<Mat>& outs) {
+list<Detection> postprocess(Mat& frame, const vector<Mat>& outs) {
     vector<int> classIds;
     vector<float> confidences;
     vector<Rect> boxes;
@@ -79,6 +79,13 @@ auto postprocess(Mat& frame, const vector<Mat>& outs) {
                 int height = (int)(data[3] * frame.rows);
                 int left = centerX - width / 2;
                 int top = centerY - height / 2;
+
+                left = left < 0 ? 0 : left;
+                top =  top < 0 ? 0 : top;
+                left = left > frame.cols ? frame.cols : left;
+                top = top > frame.rows ? frame.rows : top;
+                if (top+height>frame.rows) height = frame.rows-top;
+                if (left+width>frame.cols) width = frame.cols-left;
                 
                 classIds.push_back(classIdPoint.x);
                 confidences.push_back((float)confidence);
@@ -94,16 +101,16 @@ auto postprocess(Mat& frame, const vector<Mat>& outs) {
     NMSBoxes(boxes, confidences, confThreshold, nmsThreshold, indices);
     for(auto ind : indices) {
         Detection d;
-            d.classId = classIds[ind];
-            d.confidence = confidences[ind];
-            d.bbox =  boxes[ind];
+        d.classId = classIds[ind];
+        d.confidence = confidences[ind];
+        d.bbox =  boxes[ind];
         res.push_back(d);
     }
     return res;
 }
 
 
-int main(int argc, char** argv)
+int process_camera(int argc, char** argv)
 {
     CommandLineParser parser(argc, argv, keys);
     parser.about("Use this script to run object detection using YOLO3 in OpenCV.");
@@ -173,10 +180,11 @@ int main(int argc, char** argv)
     }
     
     // Create a window
-    static const string kWinName = "Deep learning object detection in OpenCV";
-    namedWindow(kWinName, WINDOW_NORMAL);
+    // static const string kWinName = "Deep learning object detection in OpenCV";
+    // namedWindow(kWinName, WINDOW_NORMAL);
     KalmanTracker ktr;
     // Process frames.
+    auto time = getTickCount();
     while (waitKey(1) < 0)
     {
         // get frame from the video
@@ -202,21 +210,29 @@ int main(int argc, char** argv)
         cout << "Time on forwarding: " << duration.count() << endl;
         // Remove the bounding boxes with low confidence
         auto dets = postprocess(frame, outs);
+        cout << "Detected:\n";
+        for (auto d:dets) {
+            cout << d.bbox << endl;
+        }
         // Put efficiency information. The function getPerfProfile returns the overall time for inference(t) and the timings for each of the layers(in layersTimes)
         vector<double> layersTimes;
         double freq = getTickFrequency() / 1000;
         double t = net.getPerfProfile(layersTimes) / freq;
-        ktr.Update(dets, int(t));
+        auto now = getTickCount();
+        double dtime =  (now - time)/getTickFrequency();
+        cout <<"TIME: "<<dtime<<endl;
+        ktr.Update(dets, frame,  dtime);
         string label = format("Inference time for a frame : %.2f ms", t);
         putText(frame, label, Point(0, 15), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0, 0, 255));
         
         // Write the frame with the detection boxes
         Mat detectedFrame;
         frame.convertTo(detectedFrame, CV_8U);
-        if (parser.has("image")) imwrite(outputFile, detectedFrame);
-        else video.write(detectedFrame);
+        // if (parser.has("image")) imwrite(outputFile, detectedFrame);
+        // else video.write(detectedFrame);
+        ktr.DrawCV(detectedFrame);
         
-        imshow(kWinName, frame);
+        imshow("test", detectedFrame);
     }
     cap.release();
     if (!parser.has("image")) video.release();
@@ -242,4 +258,12 @@ vector<String> getOutputsNames(const Net& net)
         names[i] = layersNames[outLayers[i] - 1];
     }
     return names;
+}
+
+int main(int argc, char** argv)
+{
+    string vid_path = "";
+    // process_camera(argc, argv);
+    process_video()
+    return 0;
 }

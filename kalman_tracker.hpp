@@ -50,7 +50,7 @@ class Track {
         todelete;
     list<Point2d> Points;
     Mat prev_hist;
-    void Update(Detection &d, int64 dt) {
+    void Update(Detection &d, float dt) {
 
         auto b = d.get_center();
         Mat meas = (Mat_<float>(2,1) << b.x, b.y);
@@ -66,7 +66,7 @@ class Track {
             Points.pop_back();
         kf.predict();
     };
-    void Update(int64 dt) {
+    void Update(float dt) {
         nomatch++;
         if (nomatch>maxnomatch){
             todelete = true;
@@ -151,7 +151,7 @@ class KalmanTracker{
     list<Track> Tracks;
     
     void DrawCV(Mat&);
-    void Update(list<Detection>, Mat& , int64);
+    void Update(list<Detection>, Mat& , float);
     KalmanTracker(int nomatch = 5,int maxblobs = 25 ,float dist = 100, float hist_tr =0.6):
         maxNoMatch(nomatch),
         maxPointsCount(maxblobs),
@@ -162,7 +162,10 @@ class KalmanTracker{
     void RemoveOldTracks() {
         Tracks.remove_if([=](Track tr){
             if (tr.nomatch>=this->maxNoMatch){
-                cout << "removing track" << tr.id << " " << tr.Points.front()<< " " << endl;
+                cout << "removing track" << tr.id <<endl;
+                for (auto p: tr.Points)
+                    cout<<p<<"-";
+                cout<<"\n";
                 return true;
             }
             return false;
@@ -208,7 +211,7 @@ void KalmanTracker::Register(list<Detection> dets, Mat &img) {
 
 
 
-void KalmanTracker::Update(list<Detection> dets, Mat &img, int64 dt) {
+void KalmanTracker::Update(list<Detection> dets, Mat &img, float dt) {
     // cout << "\nUPD\n";
     if (dets.size() == 0) {
         for (auto &tr: this->Tracks) {
@@ -235,6 +238,7 @@ void KalmanTracker::Update(list<Detection> dets, Mat &img, int64 dt) {
             if (dst(track_p, d->get_center()) <= this->tresholdDist) {
                 // cout<<"Appending to track "<<tr.id << " "<<  d->get_center() <<endl;
                 if (histMap.count(*d)==0) {
+                    cout<<"hist"<<endl;
                     histMap[*d] = calcHistRGB(img(d->bbox));
                 }
                 // cout << histMap[*d]<<endl;
