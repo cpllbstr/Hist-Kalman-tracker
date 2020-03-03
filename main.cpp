@@ -28,24 +28,25 @@ vector<string> classes;
 
 
 // Needed only for debug
-void drawPred(int classId, float conf, int left, int top, int right, int bottom, Mat& frame) {
+void drawDets(list<Detection> dets, Mat& frame) {
     //Draw a rectangle displaying the bounding box
-    rectangle(frame, Point(left, top), Point(right, bottom), Scalar(255, 178, 50), 3);
-    
-    //Get the label for the class name and its confidence
-    string label = format("%.2f", conf);
-    if (!classes.empty())
-    {
-        CV_Assert(classId < (int)classes.size());
-        label = classes[classId] + ":" + label;
+    for (auto det: dets) {
+        rectangle(frame,det.bbox, Scalar(255, 178, 50), 3);
+
+        //Get the label for the class name and its confidence
+        string label = format("%.2f", det.confidence);
+        if (!classes.empty()) {
+            CV_Assert(det.classId < (int)classes.size());
+            label = classes[det.classId] + ":" + label;
+        }
+
+        //Display the label at the top of the bounding box
+        int baseLine;
+        Size labelSize = getTextSize(label, FONT_HERSHEY_SIMPLEX, 0.5, 1, &baseLine);
+        // top = max(top, labelSize.height);
+        // rectangle(frame, Point(left, top - round(1.5*labelSize.height)), Point(left + round(1.5*labelSize.width), top + baseLine), Scalar(255, 255, 255), FILLED);
+        putText(frame, label, det.bbox.tl(), FONT_HERSHEY_SIMPLEX, 0.75, Scalar(0,0,0),1);
     }
-    
-    //Display the label at the top of the bounding box
-    int baseLine;
-    Size labelSize = getTextSize(label, FONT_HERSHEY_SIMPLEX, 0.5, 1, &baseLine);
-    top = max(top, labelSize.height);
-    rectangle(frame, Point(left, top - round(1.5*labelSize.height)), Point(left + round(1.5*labelSize.width), top + baseLine), Scalar(255, 255, 255), FILLED);
-    putText(frame, label, Point(left, top), FONT_HERSHEY_SIMPLEX, 0.75, Scalar(0,0,0),1);
 }
 
 
@@ -58,21 +59,18 @@ list<Detection> postprocess(Mat& frame, const vector<Mat>& outs) {
     vector<float> confidences;
     vector<Rect> boxes;
     
-    for (size_t i = 0; i < outs.size(); ++i)
-    {
+    for (size_t i = 0; i < outs.size(); ++i) {
         // Scan through all the bounding boxes output from the network and keep only the
         // ones with high confidence scores. Assign the box's class label as the class
         // with the highest score for the box.
         float* data = (float*)outs[i].data;
-        for (int j = 0; j < outs[i].rows; ++j, data += outs[i].cols)
-        {
+        for (int j = 0; j < outs[i].rows; ++j, data += outs[i].cols) {
             Mat scores = outs[i].row(j).colRange(5, outs[i].cols);
             Point classIdPoint;
             double confidence;
             // Get the value and location of the maximum score
             minMaxLoc(scores, 0, &confidence, 0, &classIdPoint);
-            if (confidence > confThreshold)
-            {
+            if (confidence > confThreshold) {
                 int centerX = (int)(data[0] * frame.cols);
                 int centerY = (int)(data[1] * frame.rows);
                 int width = (int)(data[2] * frame.cols);
@@ -110,8 +108,7 @@ list<Detection> postprocess(Mat& frame, const vector<Mat>& outs) {
 }
 
 
-int process_camera(int argc, char** argv)
-{
+int process_camera(int argc, char** argv) {
     CommandLineParser parser(argc, argv, keys);
     parser.about("Use this script to run object detection using YOLO3 in OpenCV.");
     if (parser.has("help"))
@@ -260,10 +257,97 @@ vector<String> getOutputsNames(const Net& net)
     return names;
 }
 
+void process_video(string vid){
+// Load names of classes
+    string classesFile = "coco.names";
+    ifstream ifs(classesFile.c_str());
+    string line;
+    while (getline(ifs, line)) classes.push_back(line);
+
+    String modelConfiguration = "yolov3.cfg";
+    String modelWeights = "yolov3.weights";
+
+
+    // Load the network
+    Net net = readNetFromDarknet(modelConfiguration, modelWeights);
+    net.setPreferableBackend(DNN_BACKEND_CUDA);
+    net.setPreferableTarget(DNN_TARGET_CUDA);
+    
+    // Open a video file or an image file or a camera stream.
+    string  outputFile;
+    VideoCapture cap;
+    VideoWriter video;
+    Mat frame, blob;
+
+    cout << "here" << endl;
+    ifstream ifile(vid);
+    cap.open(vid);
+    vid.replace(vid.end()-4, vid.end(), "_out.avi");
+    cout << "we go again" << vid << endl;
+    outputFile = vid;
+    video.open(outputFile, VideoWriter::fourcc('M','J','P','G'), 28, Size(cap.get(CAP_PROP_FRAME_WIDTH), cap.get(CAP_PROP_FRAME_HEIGHT)));
+
+     KalmanTracker ktr;
+    // Process frames.
+    
+    auto time = getTickCount();
+    while (waitKey(1) < 0)
+    {
+        // get frame from the video
+        cap >> frame;
+
+        // Stop the program if reached end of video
+        if (frame.empty()) {
+            cout << "Done processing !!!" << endl;
+            cout << "Output file is stored as " << outputFile << endl;
+            waitKey(3000);
+            break;
+        }
+        // Create a 4D blob from a frame.
+        blobFromImage(frame, blob, 1/255.0, cv::Size(inpWidth, inpHeight), Scalar(0,0,0), true, false);
+        auto start = std::chrono::steady_clock::now();
+        //Sets the input to the network
+        net.setInput(blob);
+        // Runs the forward pass to get output of the output layers
+        vector<Mat> outs;
+        net.forward(outs, getOutputsNames(net));
+        
+        auto duration = std::chrono::duration_cast<chrono::milliseconds>(std::chrono::steady_clock::now() - start);
+        cout << "Time on forwarding: " << duration.count() << endl;
+        // Remove the bounding boxes with low confidence
+        auto dets = postprocess(frame, outs);
+        cout << "Detected:\n";
+        for (auto d:dets) {
+            cout << d.bbox << endl;
+        }
+        // Put efficiency information. The function getPerfProfile returns the overall time for inference(t) and the timings for each of the layers(in layersTimes)
+        vector<double> layersTimes;
+        double freq = getTickFrequency() / 1000;
+        double t = net.getPerfProfile(layersTimes) / freq;
+        auto now = getTickCount();
+        double dtime =  (now - time)/getTickFrequency();
+        cout <<"TIME: "<<dtime<<endl;
+        ktr.Update(dets, frame,  1.0/* dtime */);
+        string label = format("Inference time for a frame : %.2f ms", t);
+        putText(frame, label, Point(0, 15), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0, 0, 255));
+        
+        // Write the frame with the detection boxes
+        Mat detectedFrame;
+        frame.convertTo(detectedFrame, CV_8U);
+        // if (parser.has("image")) imwrite(outputFile, detectedFrame);
+        drawDets(dets, detectedFrame);
+        ktr.DrawCV(detectedFrame);
+        
+        video.write(detectedFrame);
+        // imshow("test", detectedFrame);
+    }
+    cap.release();
+}
+
 int main(int argc, char** argv)
 {
-    string vid_path = "";
+    string vid_path = "./example_2020_02_26.mp4";
     // process_camera(argc, argv);
-    process_video()
+    process_video(vid_path);
     return 0;
 }

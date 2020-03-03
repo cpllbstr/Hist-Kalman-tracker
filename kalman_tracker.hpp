@@ -152,7 +152,7 @@ class KalmanTracker{
     
     void DrawCV(Mat&);
     void Update(list<Detection>, Mat& , float);
-    KalmanTracker(int nomatch = 5,int maxblobs = 25 ,float dist = 100, float hist_tr =0.6):
+    KalmanTracker(int nomatch = 25,int maxblobs = 25 ,float dist = 1000, float hist_tr =0.6):
         maxNoMatch(nomatch),
         maxPointsCount(maxblobs),
         tresholdDist(dist),
