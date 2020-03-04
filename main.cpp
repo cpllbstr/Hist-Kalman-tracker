@@ -6,6 +6,7 @@
 #include <sstream>
 #include <iostream>
 #include <kalman_tracker.hpp>
+#include <toml.hpp>
 #include <opencv2/opencv.hpp>
 
 const char* keys =
@@ -23,6 +24,16 @@ float confThreshold = 0.5; // Confidence threshold
 float nmsThreshold = 0.4;  // Non-maximum suppression threshold
 int inpWidth = 416;  // Width of network's input image
 int inpHeight = 416; // Height of network's input image
+string 
+    yolo_cfg, 
+    yolo_weights;
+int 
+    distT,
+    camera_id,
+    pointsC,
+    nomatch;
+float histT;
+
 vector<string> classes;
 
 
@@ -45,7 +56,7 @@ void drawDets(list<Detection> dets, Mat& frame) {
         Size labelSize = getTextSize(label, FONT_HERSHEY_SIMPLEX, 0.5, 1, &baseLine);
         // top = max(top, labelSize.height);
         // rectangle(frame, Point(left, top - round(1.5*labelSize.height)), Point(left + round(1.5*labelSize.width), top + baseLine), Scalar(255, 255, 255), FILLED);
-        putText(frame, label, det.bbox.tl(), FONT_HERSHEY_SIMPLEX, 0.75, Scalar(0,0,0),1);
+        putText(frame, label, det.bbox.tl(), FONT_HERSHEY_SIMPLEX, 0.75, CV_RGB(250,230,0),1.5);
     }
 }
 
@@ -257,7 +268,7 @@ vector<String> getOutputsNames(const Net& net)
     return names;
 }
 
-void process_video(string vid){
+void process_video(string vid) {
 // Load names of classes
     string classesFile = "coco.names";
     ifstream ifs(classesFile.c_str());
@@ -279,15 +290,17 @@ void process_video(string vid){
     VideoWriter video;
     Mat frame, blob;
 
-    cout << "here" << endl;
     ifstream ifile(vid);
     cap.open(vid);
+    if(!cap.isOpened()){
+        cout << "Cannot open: "<<vid<<endl;
+        return;
+    } 
     vid.replace(vid.end()-4, vid.end(), "_out.avi");
-    cout << "we go again" << vid << endl;
     outputFile = vid;
     video.open(outputFile, VideoWriter::fourcc('M','J','P','G'), 28, Size(cap.get(CAP_PROP_FRAME_WIDTH), cap.get(CAP_PROP_FRAME_HEIGHT)));
 
-     KalmanTracker ktr;
+    KalmanTracker ktr(nomatch, pointsC, distT, histT);
     // Process frames.
     
     auto time = getTickCount();
@@ -326,6 +339,7 @@ void process_video(string vid){
         double t = net.getPerfProfile(layersTimes) / freq;
         auto now = getTickCount();
         double dtime =  (now - time)/getTickFrequency();
+        time = now;
         cout <<"TIME: "<<dtime<<endl;
         ktr.Update(dets, frame,  1.0/* dtime */);
         string label = format("Inference time for a frame : %.2f ms", t);
@@ -346,8 +360,48 @@ void process_video(string vid){
 
 int main(int argc, char** argv)
 {
-    string vid_path = "./example_2020_02_26.mp4";
+    string config_s = "./config.toml";
+    auto config=toml::parse(config_s);
+    //net cofiguration
+    try {
+        yolo_cfg = config["net"]["cfg"].as_string();
+        yolo_weights = config["net"]["weights"].as_string();
+        confThreshold = config["net"]["confThreshold"].as_floating();
+        nmsThreshold = config["net"]["nmsThreshold"].as_floating();
+        inpWidth = config["net"]["inpWidth"].as_integer(); 
+        inpHeight = config["net"]["inpHeight"].as_integer();
+    } catch(const exception &e) {
+        cout << "Cannot parse data from "<<config_s <<" [net]! Check your syntax: ";
+        cout << e.what() << endl;
+        return -1;
+    }
+    //input cofiguration
+    try {
+        camera_id = config["input"]["camera_id"].as_integer();
+    } catch(const exception &e) {
+        cout << "Cannot parse data from "<<config_s <<" [input].camera_id! Check your syntax: ";
+        cout << e.what() << endl;
+        return -1;
+    }
+    string vid_path = "";
+    if (config.at("input").contains("video")) {
+        vid_path = config["input"]["video"].as_string();
+    }
+    //tracker cofiguration
+    try {
+        distT =config["tracker"]["distTreshold"].as_integer();
+        histT =config["tracker"]["histTreshold"].as_floating();
+        pointsC=config["tracker"]["pointsInTrack"].as_integer();
+        nomatch=config["tracker"]["maxNoMatch"].as_integer();
+    } catch(const exception &e) {
+        cout << "Cannot parse data from "<<config_s <<" [tracker]! Check your syntax: ";
+        cout << e.what() << endl;
+        return -1;
+    }
+
+
+    // string vid_path = "./data/example_2020_02_26.mp4";
     // process_camera(argc, argv);
     process_video(vid_path);
-    return 0;
+    // return 0;
 }

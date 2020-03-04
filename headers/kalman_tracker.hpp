@@ -104,7 +104,7 @@ class Track {
         setIdentity(kf.processNoiseCov, cv::Scalar(1e-5));
         // Measures Noise Covariance Matrix R
         setIdentity(kf.measurementNoiseCov, cv::Scalar(1e-2));
-        kf.statePost = (Mat_<float>(4,1) << b.x, b.y, 1., 1.);
+        kf.statePost = (Mat_<float>(4,1) << b.x, b.y, 0., 0.);
         // cout << "State:\n" << kf.statePre <<endl;
         kf.statePre = kf.statePost;
         // cout << kf.statePre << endl;
@@ -116,6 +116,7 @@ class Track {
                classId ==b.classId;
     }
     ~Track() {
+        // Points.~list();
     }
 };
 
@@ -126,6 +127,7 @@ void Track::DrawCV(Mat &img) {
     } */
     cout <<endl;
     Point prev = Points.front();
+    putText(img, "ID:"+to_string(id),prev,FONT_HERSHEY_SIMPLEX, 0.25, CV_RGB(250,230,0),1.5);
     for(auto p: Points) {
         circle(img, p, 2, CV_RGB(255,0 , 0), 2);
         line(img,prev, p,CV_RGB(225, 0, 0) , 1);
@@ -152,9 +154,9 @@ class KalmanTracker{
     
     void DrawCV(Mat&);
     void Update(list<Detection>, Mat& , float);
-    KalmanTracker(int nomatch = 25,int maxblobs = 25 ,float dist = 1000, float hist_tr =0.6):
+    KalmanTracker(int nomatch = 25,int maxpoints = 25 ,float dist = 100, float hist_tr =0.6):
         maxNoMatch(nomatch),
-        maxPointsCount(maxblobs),
+        maxPointsCount(maxpoints),
         tresholdDist(dist),
         histTreshold(hist_tr)
         {}
@@ -201,7 +203,6 @@ void KalmanTracker::Register(list<Detection> dets, Mat &img) {
     for (auto &d: dets) { 
         if (!d.appended) {
             cout<< "New track from: " << d.get_center() << endl;
-            cout << maxNoMatch << endl;
             auto NewTr = Track(d, this->maxPointsCount, this->maxNoMatch);
             NewTr.prev_hist = calcHistRGB(img(d.bbox));
             this->Tracks.push_back(move(NewTr));
@@ -225,7 +226,8 @@ void KalmanTracker::Update(list<Detection> dets, Mat &img, float dt) {
         this->Register(move(dets), img);
         return;
     }
-    unordered_map<Detection, Mat> histMap;
+    // auto histMap = make_unique<unordered_map<Detection, Mat>>();
+    unique_ptr<unordered_map<Detection, Mat>> histMap(new unordered_map<Detection, Mat>);
     for (auto& tr : this->Tracks) {
         auto track_p = tr.Points.front();
         auto best_hist_score = histTreshold;
@@ -237,12 +239,11 @@ void KalmanTracker::Update(list<Detection> dets, Mat &img, float dt) {
             }
             if (dst(track_p, d->get_center()) <= this->tresholdDist) {
                 // cout<<"Appending to track "<<tr.id << " "<<  d->get_center() <<endl;
-                if (histMap.count(*d)==0) {
-                    cout<<"hist"<<endl;
-                    histMap[*d] = calcHistRGB(img(d->bbox));
+                if (histMap->count(*d)==0) {
+                    (*histMap)[*d] = calcHistRGB(img(d->bbox));
                 }
                 // cout << histMap[*d]<<endl;
-                auto hist_score = compareHist(tr.prev_hist, histMap[*d], HISTCMP_BHATTACHARYYA);
+                auto hist_score = compareHist(tr.prev_hist, (*histMap)[*d], HISTCMP_BHATTACHARYYA);
                 if (hist_score < best_hist_score) {
                     best_hist_score = hist_score;
                     best_det = d;
@@ -252,9 +253,8 @@ void KalmanTracker::Update(list<Detection> dets, Mat &img, float dt) {
             }
         }
         if (best_det != dets.end()){
-            // cout<<"APPENDED!"<<endl;
             tr.Update(*best_det, dt);
-            tr.prev_hist = histMap[*best_det];
+            tr.prev_hist = (*histMap)[*best_det];
             best_det->appended = true;
         } else {
             tr.Update(dt);
