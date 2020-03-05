@@ -14,6 +14,6 @@ video="./data/video_example.mpg" # if exists video file would be processed
 distTreshold = 200 # Distance treshold 
 histTreshold = 0.6 # Hist treshold
 pointsInTrack = 50 # number of points to store in track
-maxNoMatch = 15 # track lifetime(frames) without finding the next prediction
+maxNoMatch = 5 # track lifetime(frames) without finding the next prediction
 
 # @TODO:[lines] represents detection lines

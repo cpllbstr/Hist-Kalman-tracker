@@ -1,3 +1,0 @@
-[submodule "3dparty/toml11"]
-	path = 3dparty/toml11
-	url = https://github.com/ToruNiina/toml11

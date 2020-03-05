@@ -398,10 +398,5 @@ int main(int argc, char** argv)
         cout << e.what() << endl;
         return -1;
     }
-
-
-    // string vid_path = "./data/example_2020_02_26.mp4";
-    // process_camera(argc, argv);
     process_video(vid_path);
-    // return 0;
 }
