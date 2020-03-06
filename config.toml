@@ -17,3 +17,7 @@ pointsInTrack = 50 # number of points to store in track
 maxNoMatch = 5 # track lifetime(frames) without finding the next prediction
 
 # @TODO:[lines] represents detection lines
+lines = [
+    {p1 = [0,  0], p2 = [1, 1]},
+    {p1 = [2, 2], p2 = [3, 3]} 
+]
