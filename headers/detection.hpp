@@ -1,4 +1,5 @@
 #include <opencv2/opencv.hpp>
+#include <toml.hpp>
 
 using namespace cv;
 
@@ -36,8 +37,7 @@ struct hash<Detection>{
 
 class Line {
     private:
-    // point to the left of the line
-    inline bool pointToTheLeft(Point p) {
+    inline bool pointToTheRight(Point p) {
         return ((this->beg.x-this->end.x)*(p.y-this->end.y) - (this->beg.y-this->end.y)*(p.x-this->end.x)) > 0;
     }
     Point ToVec() {
@@ -49,20 +49,35 @@ class Line {
     inline bool intersect(Line l) {
         return (cross(this->ToVec(),l.ToVec()) != 0); 
     }
-    public: 
+    public:
+    int id;
     cv::Point2i beg, end;
     Line() : beg{0,0}, end{0,0} {};
     Line(int x1, int y1, int x2, int y2) : beg{x1, y1}, end{x2, y2} {};
     Line(Point p1, Point p2) : beg(p1), end(p2) {};
-    Line(const Line &l) : beg(l.beg), end(l.end) {}; 
+    Line(const Line &l) : beg(l.beg), end(l.end), id(l.id) {};
+    Line(toml::table); 
     void Print() {
         std::cout << beg<< "->"<< end << std::endl;
     }
     void DrawCV(cv::Mat& img) {
-        cv::line(img, beg, end, CV_RGB(128, 128, 128), 2);
-        cv::circle(img, beg, 2, CV_RGB(128, 128, 128));
+        // @TODO: draw direction of detection line
+        cv::line(img, beg, end, CV_RGB(128, 0, 255), 2);
+        putText(img, "DL: "+std::to_string(id),beg,FONT_HERSHEY_SIMPLEX, 0.5, CV_RGB(0,230,0),1.5);
+        cv::circle(img, beg, 4, CV_RGB(128, 0, 128), 2);
     }
-    bool CrossedInDirection(Line l) {
-        return (this->intersect(l) && l.pointToTheLeft(this->end) );
+    //returns true if lines crossed and this line's second point is to the right of detection line
+    bool CrossedInDirection(Line detection_line) {
+        std::cout << this->end << std::endl;
+        return (this->intersect(detection_line) && detection_line.pointToTheRight(this->end));
     }
 };
+
+Line::Line(toml::table detline) {
+    auto p1 = detline["beg"].as_array();
+    auto p2 = detline["end"].as_array();
+    this->beg = Point2i(p1[0].as_integer(), p1[1].as_integer());
+    this->end = Point2i(p2[0].as_integer(), p2[1].as_integer());
+    this->id = detline["id"].as_integer();
+    std::cout << this->id << std::endl;
+} 

@@ -1,5 +1,6 @@
 #include <opencv2/opencv.hpp>
 #include <detection.hpp>
+#include <toml.hpp>
 
 using namespace std;
 using namespace cv;
@@ -46,12 +47,12 @@ class Track {
         maxlen,
         id;
     bool 
-        updated,
+        updated=false,
         todelete;
     list<Point2d> Points;
     Mat prev_hist;
     void Update(Detection &d, float dt) {
-
+        updated=true;
         auto b = d.get_center();
         Mat meas = (Mat_<float>(2,1) << b.x, b.y);
         // cout << kf.measurementMatrix; 
@@ -67,6 +68,7 @@ class Track {
         kf.predict();
     };
     void Update(float dt) {
+        updated=false;
         nomatch++;
         if (nomatch>maxnomatch){
             todelete = true;
@@ -125,7 +127,7 @@ void Track::DrawCV(Mat &img) {
     /* for(auto p: Points){
         cout << p <<"-";
     } */
-    cout <<endl;
+    // cout <<endl;
     Point prev = Points.front();
     putText(img, "ID:"+to_string(id),prev,FONT_HERSHEY_SIMPLEX, 0.25, CV_RGB(250,230,0),1.5);
     for(auto p: Points) {
@@ -141,7 +143,8 @@ class KalmanTracker{
     private:
     Mat calcHistRGB(Mat);
     void Register(list<Detection>, Mat&);
-    
+    list<Line> DetLines;
+
     public:
     int 
         maxNoMatch,
@@ -152,7 +155,8 @@ class KalmanTracker{
         histTreshold;
     list<Track> Tracks;
     
-    void DrawCV(Mat&);
+    void DrawCV(Mat&, bool);
+    void UpdateConfig(string path_to_config);
     void Update(list<Detection>, Mat& , float);
     KalmanTracker(int nomatch = 25,int maxpoints = 25 ,float dist = 100, float hist_tr =0.6):
         maxNoMatch(nomatch),
@@ -164,7 +168,7 @@ class KalmanTracker{
     void RemoveOldTracks() {
         Tracks.remove_if([=](Track tr){
             if (tr.nomatch>=this->maxNoMatch){
-                cout << "removing track" << tr.id <<endl;
+                cout << "removing track with id " << tr.id <<endl;
                 for (auto p: tr.Points)
                     cout<<p<<"-";
                 cout<<"\n";
@@ -175,9 +179,42 @@ class KalmanTracker{
     };
 };
 
-void KalmanTracker::DrawCV(Mat &img) {
-    for (auto t: this->Tracks){
+// @TODO: should be made with grpc updating
+void KalmanTracker::UpdateConfig (string path_to_config) {
+    toml::value config;
+    int distT,pointsC, nomatch;
+    float histT;
+    try {
+        config=toml::parse(path_to_config);
+        distT =config["tracker"]["distTreshold"].as_integer();
+        histT =config["tracker"]["histTreshold"].as_floating();
+        pointsC=config["tracker"]["pointsInTrack"].as_integer();
+        nomatch=config["tracker"]["maxNoMatch"].as_integer();
+        if (distT<0 or histT<0 or pointsC<0 or nomatch<0) {
+            throw invalid_argument("One of tracker params is negative value");
+        }
+        auto lines = config["tracker"]["lines"].as_array();
+        for (auto &l : lines ) {
+            DetLines.push_back(l.as_table());    
+        }
+    } catch(const exception &e) {
+        cout << e.what() << "\nUsing default configuration!\n";
+        exit(-1);
+    }
+    this->histTreshold = histT;
+    this->maxNoMatch = nomatch;
+    this->maxPointsCount = pointsC;
+    this->histTreshold = histT;
+};
+
+void KalmanTracker::DrawCV(Mat &img, bool with_det_lines=true) {
+    for (auto &t: this->Tracks){
         t.DrawCV(img);
+    }
+    if (with_det_lines) {
+        for (auto &l: this->DetLines) {
+            l.DrawCV(img);
+        }
     }
 }
 
@@ -259,6 +296,14 @@ void KalmanTracker::Update(list<Detection> dets, Mat &img, float dt) {
         } else {
             tr.Update(dt);
         }
+        if (tr.updated) {
+            auto ln = Line(tr.Points.front(),tr.Points.back());
+            for (auto &lin: this->DetLines) {
+                if (ln.CrossedInDirection(lin)) {
+                    lin.DrawCV(img);
+                }
+            }
+        }
     }
     /* for (auto &d: dets) {
          cout <<"app"<< d.appended<<endl;
@@ -266,27 +311,3 @@ void KalmanTracker::Update(list<Detection> dets, Mat &img, float dt) {
     this->RemoveOldTracks();
     this->Register(move(dets), img);
 }
-
-
-/* void testHist(Mat img){
-    // auto res = compareHist(hist1, hist2, HISTCMP_BHATTACHARYYA); 
-    // cout << res << endl;
-    
-    // auto img2 = imread("/home/lbstr/Downloads/Telegram Desktop/1.jpg");
-    auto img1 = imread("./car1_1.png");
-    auto img2 = imread("./car1.png");
-
-
-    // imshow("img1", img1);
-    // imshow("imgq1", eqim1);
-    // waitKey(0);
-
-    auto hist1 = calcHistRGB(img1);
-    auto hist2 = calcHistRGB(img2);
-
-    cout << compareHist(hist2, hist1, HISTCMP_INTERSECT) << endl;
-    cout << compareHist(hist1, hist1, HISTCMP_INTERSECT) << endl;
-    // imshow("h2", img(Rect(300, 300, 300, 300)));
-    // auto res = compareHist(hist1, hist2, HISTCMP_BHATTACHARYYA); 
-    // cout << res << endl;
-} */

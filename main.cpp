@@ -28,11 +28,11 @@ string
     yolo_cfg, 
     yolo_weights;
 int 
-    distT,
-    camera_id,
-    pointsC,
-    nomatch;
-float histT;
+    // distT,
+    camera_id;
+    // pointsC,
+    // nomatch;
+// float histT;
 
 vector<string> classes;
 
@@ -300,8 +300,11 @@ void process_video(string vid) {
     outputFile = vid;
     video.open(outputFile, VideoWriter::fourcc('M','J','P','G'), 28, Size(cap.get(CAP_PROP_FRAME_WIDTH), cap.get(CAP_PROP_FRAME_HEIGHT)));
 
-    KalmanTracker ktr(nomatch, pointsC, distT, histT);
+    KalmanTracker ktr;
     // Process frames.
+
+    ktr.UpdateConfig("./config.toml");
+    cout << ktr.histTreshold << ktr.maxNoMatch << ktr.maxPointsCount << ktr.tresholdDist << endl;
     
     auto time = getTickCount();
     while (waitKey(1) < 0)
@@ -353,7 +356,7 @@ void process_video(string vid) {
         ktr.DrawCV(detectedFrame);
         
         video.write(detectedFrame);
-        // imshow("test", detectedFrame);
+        imshow("test", detectedFrame);
     }
     cap.release();
 }
@@ -388,21 +391,10 @@ int main(int argc, char** argv)
         vid_path = config["input"]["video"].as_string();
     }
     //tracker cofiguration
-    try {
-        distT =config["tracker"]["distTreshold"].as_integer();
-        histT =config["tracker"]["histTreshold"].as_floating();
-        pointsC=config["tracker"]["pointsInTrack"].as_integer();
-        nomatch=config["tracker"]["maxNoMatch"].as_integer();
-    } catch(const exception &e) {
-        cout << "Cannot parse data from "<<config_s <<" [tracker]! Check your syntax: ";
-        cout << e.what() << endl;
-        return -1;
-    }
 
     cv::Vec2i v(1,1);
-
-    Line l1(5,5,0,0);
-    Line l2(0,5,5,0);
-    cout << boolalpha << l1.CrossedInDirection(l2) << endl;
-    // process_video(vid_path);
+    // Line l1(0,0,5,5);
+    // Line l2(0,5,5,0);
+    // cout << boolalpha << l1.CrossedInDirection(l2) << endl;
+    process_video(vid_path);
 }
