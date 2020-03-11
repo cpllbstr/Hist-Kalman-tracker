@@ -13,9 +13,10 @@ video="./data/video_example.mpg" # if exists video file would be processed
 [tracker]
 distTreshold = 200 # Distance treshold 
 histTreshold = 0.6 # Hist treshold
-pointsInTrack = 50 # number of points to store in track
+pointsInTrack = 10 # number of points to store in track
 maxNoMatch = 5 # track lifetime(frames) without finding the next prediction
+detectClasses = [0,1,2,3,4]
 lines = [
-    {id =0, beg = [100, 100], end = [500, 500]},
-    {id=1, beg = [710, 700], end = [300, 700]} 
+    #{id =0, beg = [100, 100], end = [500, 500]},
+    {id=1, beg = [300, 700], end = [1500, 700]} 
 ]

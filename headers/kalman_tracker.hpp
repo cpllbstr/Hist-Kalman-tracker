@@ -55,13 +55,9 @@ class Track {
         updated=true;
         auto b = d.get_center();
         Mat meas = (Mat_<float>(2,1) << b.x, b.y);
-        // cout << kf.measurementMatrix; 
-        // cout<< " here we go"<< endl << endl;
         kf.correct(meas); 
-        // cout<<  " again" << endl;
         kf.transitionMatrix.at<float>(0,2) = dt; 
         kf.transitionMatrix.at<float>(1,3) = dt;
-        //cout << kf.statePost << endl;
         Points.push_front(statetoPoint2d(kf.statePost));
         if (Points.size()>maxlen)
             Points.pop_back();
@@ -107,9 +103,7 @@ class Track {
         // Measures Noise Covariance Matrix R
         setIdentity(kf.measurementNoiseCov, cv::Scalar(1e-2));
         kf.statePost = (Mat_<float>(4,1) << b.x, b.y, 0., 0.);
-        // cout << "State:\n" << kf.statePre <<endl;
         kf.statePre = kf.statePost;
-        // cout << kf.statePre << endl;
         Points.push_back(b);
     }
     bool operator==(const Track& b) {
@@ -168,10 +162,10 @@ class KalmanTracker{
     void RemoveOldTracks() {
         Tracks.remove_if([=](Track tr){
             if (tr.nomatch>=this->maxNoMatch){
-                cout << "removing track with id " << tr.id <<endl;
-                for (auto p: tr.Points)
-                    cout<<p<<"-";
-                cout<<"\n";
+                // cout << "removing track with id " << tr.id <<endl;
+                // for (auto p: tr.Points)
+                    // cout<<p<<"-";
+                // cout<<"\n";
                 return true;
             }
             return false;
@@ -239,7 +233,7 @@ constexpr auto dst = [](Point2d p1,Point2d p2) {return sqrt((p1.x - p2.x)*(p1.x 
 void KalmanTracker::Register(list<Detection> dets, Mat &img) {
     for (auto &d: dets) { 
         if (!d.appended) {
-            cout<< "New track from: " << d.get_center() << endl;
+            // cout<< "New track from: " << d.get_center() << endl;
             auto NewTr = Track(d, this->maxPointsCount, this->maxNoMatch);
             NewTr.prev_hist = calcHistRGB(img(d.bbox));
             this->Tracks.push_back(move(NewTr));
@@ -284,9 +278,7 @@ void KalmanTracker::Update(list<Detection> dets, Mat &img, float dt) {
                 if (hist_score < best_hist_score) {
                     best_hist_score = hist_score;
                     best_det = d;
-                }/*  else {
-                    cout << "Tresholded: "<< hist_score <<">"<< best_hist_score << endl;
-                } */
+                }
             }
         }
         if (best_det != dets.end()){
@@ -300,14 +292,17 @@ void KalmanTracker::Update(list<Detection> dets, Mat &img, float dt) {
             auto ln = Line(tr.Points.front(),tr.Points.back());
             for (auto &lin: this->DetLines) {
                 if (ln.CrossedInDirection(lin)) {
-                    lin.DrawCV(img);
+                    // cout << "DetL: ";
+                    // lin.Print();
+                    // cout << "Trak: ";
+                    // ln.Print();
+                    // ln.DrawCV(img);
+                    cout << "Crossed!" << endl;
+                    // @TODO: here should be sending through gRPC
                 }
             }
         }
     }
-    /* for (auto &d: dets) {
-         cout <<"app"<< d.appended<<endl;
-    } */
     this->RemoveOldTracks();
     this->Register(move(dets), img);
 }

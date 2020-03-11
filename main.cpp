@@ -306,6 +306,7 @@ void process_video(string vid) {
     ktr.UpdateConfig("./config.toml");
     cout << ktr.histTreshold << ktr.maxNoMatch << ktr.maxPointsCount << ktr.tresholdDist << endl;
     
+    auto start_s = std::chrono::steady_clock::now();
     auto time = getTickCount();
     while (waitKey(1) < 0)
     {
@@ -332,10 +333,6 @@ void process_video(string vid) {
         cout << "Time on forwarding: " << duration.count() << endl;
         // Remove the bounding boxes with low confidence
         auto dets = postprocess(frame, outs);
-        cout << "Detected:\n";
-        for (auto d:dets) {
-            cout << d.bbox << endl;
-        }
         // Put efficiency information. The function getPerfProfile returns the overall time for inference(t) and the timings for each of the layers(in layersTimes)
         vector<double> layersTimes;
         double freq = getTickFrequency() / 1000;
@@ -344,8 +341,10 @@ void process_video(string vid) {
         double dtime =  (now - time)/getTickFrequency();
         time = now;
         cout <<"TIME: "<<dtime<<endl;
+        auto dduration = std::chrono::duration_cast<chrono::milliseconds>(std::chrono::steady_clock::now() - start);
+        cout << format("dduration: %d ms\n", dduration.count());
         ktr.Update(dets, frame,  1.0/* dtime */);
-        string label = format("Inference time for a frame : %.2f ms", t);
+        string label = format("Inference time for a frame : %.2f ms|| overall duration %d", t, dduration.count());
         putText(frame, label, Point(0, 15), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0, 0, 255));
         
         // Write the frame with the detection boxes
