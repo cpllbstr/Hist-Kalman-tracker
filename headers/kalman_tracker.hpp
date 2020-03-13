@@ -1,170 +1,55 @@
+#pragma once
 #include <opencv2/opencv.hpp>
 #include <detection.hpp>
 #include <toml.hpp>
+#include <yolo_grpc_impl.h>
+#include <track.hpp>
+#include <thread>
 
-using namespace std;
-using namespace cv;
-
-class Track {
-    private:
-   
-    static int id_n;
-    void initKalman() {
-        // Transition State Matrix A
-        // Note: set dT at each processing step!
-        // [ 1 0 dT  0 ]
-        // [ 0 1  0 dT ]
-        // [ 0 0  1  0 ]
-        // [ 0 0  0  1 ]
-        setIdentity(this->kf.transitionMatrix);
-        // Measure Matrix H
-        // [ 1 0 ]
-        // [ 0 1 ]
-        setIdentity(this->kf.measurementMatrix); 
-        // Process Noise Covariance Matrix Q
-        // [ Ex   0   0     0    ]
-        // [ 0    Ey  0     0    ]
-        // [ 0    0   Ev_x  0    ]
-        // [ 0    0   0     Ev_y ]
-        setIdentity(this->kf.processNoiseCov, cv::Scalar(1e-5));
-        // Measures Noise Covariance Matrix R
-        setIdentity(this->kf.measurementNoiseCov, cv::Scalar(1e-2));
-        // setIdentity(this->kf.errorCovPost, Scalar::all(1e-2));
-    }
-    Point2d statetoPoint2d(Mat st) {
-        // cout<< st << endl;
-        // cout << st.at<float>(0) <<"-"<< st.at<float>(1) << endl;
-        return Point2i(int(st.at<float>(0)), int(st.at<float>(1)));
-    };
-
-    public:
-    KalmanFilter kf;
-    void DrawCV(Mat&);
-    int 
-        classId,
-        nomatch,
-        maxnomatch,
-        maxlen,
-        id;
-    bool 
-        updated=false,
-        todelete;
-    list<Point2d> Points;
-    Mat prev_hist;
-    void Update(Detection &d, float dt) {
-        updated=true;
-        auto b = d.get_center();
-        Mat meas = (Mat_<float>(2,1) << b.x, b.y);
-        kf.correct(meas); 
-        kf.transitionMatrix.at<float>(0,2) = dt; 
-        kf.transitionMatrix.at<float>(1,3) = dt;
-        Points.push_front(statetoPoint2d(kf.statePost));
-        if (Points.size()>maxlen)
-            Points.pop_back();
-        kf.predict();
-    };
-    void Update(float dt) {
-        updated=false;
-        nomatch++;
-        if (nomatch>maxnomatch){
-            todelete = true;
-            return;
-        }
-        kf.transitionMatrix.at<float>(0,2) = dt; 
-        kf.transitionMatrix.at<float>(1,3) = dt;
-        kf.predict();
-        Points.push_front(statetoPoint2d(kf.statePost));
-        if (Points.size()>maxlen)
-            Points.pop_back();
-    };
-    Track(Detection &det, int maxle = 15, int maxno = 10): maxlen(maxle), maxnomatch(maxno) {
-        id = ++id_n;
-        nomatch =0;
-        classId = det.classId;
-        auto b = det.get_center();
-        kf = KalmanFilter(4,2);
-        // Transition State Matrix A
-        // Note: set dT at each processing step!
-        // [ 1 0 dT  0 ]
-        // [ 0 1  0 dT ]
-        // [ 0 0  1  0 ]
-        // [ 0 0  0  1 ]
-        setIdentity(kf.transitionMatrix);
-        // Measure Matrix H
-        // [ 1 0 ]
-        // [ 0 1 ]
-        setIdentity(kf.measurementMatrix); 
-        // Process Noise Covariance Matrix Q
-        // [ Ex   0   0     0    ]
-        // [ 0    Ey  0     0    ]
-        // [ 0    0   Ev_x  0    ]
-        // [ 0    0   0     Ev_y ]
-        setIdentity(kf.processNoiseCov, cv::Scalar(1e-5));
-        // Measures Noise Covariance Matrix R
-        setIdentity(kf.measurementNoiseCov, cv::Scalar(1e-2));
-        kf.statePost = (Mat_<float>(4,1) << b.x, b.y, 0., 0.);
-        kf.statePre = kf.statePost;
-        Points.push_back(b);
-    }
-    bool operator==(const Track& b) {
-        return id==b.id,
-               nomatch==b.nomatch,
-               classId ==b.classId;
-    }
-    ~Track() {
-        // Points.~list();
+struct EnvVarException : public exception {
+    const char* what() const throw() {
+        return "DETECTOR_ADDR_PORT enviroment variable is not set! Run command in shell: export DETECTOR_ADDR_PORT=\"127.0.0.1:8000\"";
     }
 };
 
-void Track::DrawCV(Mat &img) {
-    // cout<<"track "<< this->id<<" with lenght:"<< this->Points.size() <<" points"<< this->Points.front()<< this->Points.back()<< endl;
-    /* for(auto p: Points){
-        cout << p <<"-";
-    } */
-    // cout <<endl;
-    Point prev = Points.front();
-    putText(img, "ID:"+to_string(id),prev,FONT_HERSHEY_SIMPLEX, 0.25, CV_RGB(250,230,0),1.5);
-    for(auto p: Points) {
-        circle(img, p, 2, CV_RGB(255,0 , 0), 2);
-        line(img,prev, p,CV_RGB(225, 0, 0) , 1);
-        prev=p;
-    }
-}
-
-int Track::id_n;
-
-class KalmanTracker{
-    private:
+class KalmanTracker {
+private:
+    unique_ptr<STYoloClient> s;
     Mat calcHistRGB(Mat);
     void Register(list<Detection>, Mat&);
     list<Line> DetLines;
-
-    public:
-    int 
-        maxNoMatch,
-        maxPointsCount;
+public:
+    int
+    maxNoMatch,
+    maxPointsCount;
     float
-        // @TODO: Treshold distance from state params
-        tresholdDist,
-        histTreshold;
+    // @TODO: Treshold distance from state params
+    tresholdDist,
+    histTreshold;
     list<Track> Tracks;
-    
+
     void DrawCV(Mat&, bool);
     void UpdateConfig(string path_to_config);
-    void Update(list<Detection>, Mat& , float);
-    KalmanTracker(int nomatch = 25,int maxpoints = 25 ,float dist = 100, float hist_tr =0.6):
+    void Update(list<Detection>, Mat&, float);
+    KalmanTracker(int nomatch = 25,int maxpoints = 25,float dist = 100, float hist_tr =0.6):
         maxNoMatch(nomatch),
         maxPointsCount(maxpoints),
         tresholdDist(dist),
         histTreshold(hist_tr)
-        {}
+    {
+        const auto ip_addr = getenv("DETECTOR_ADDR_PORT");
+        if (ip_addr == NULL) {
+            throw EnvVarException();
+        }
+        this->s = unique_ptr<STYoloClient>(new STYoloClient(grpc::CreateChannel(ip_addr, grpc::InsecureChannelCredentials())));
+    }
 
     void RemoveOldTracks() {
-        Tracks.remove_if([=](Track tr){
-            if (tr.nomatch>=this->maxNoMatch){
+        Tracks.remove_if([=](Track tr) {
+            if (tr.nomatch>=this->maxNoMatch) {
                 // cout << "removing track with id " << tr.id <<endl;
                 // for (auto p: tr.Points)
-                    // cout<<p<<"-";
+                // cout<<p<<"-";
                 // cout<<"\n";
                 return true;
             }
@@ -189,7 +74,7 @@ void KalmanTracker::UpdateConfig (string path_to_config) {
         }
         auto lines = config["tracker"]["lines"].as_array();
         for (auto &l : lines ) {
-            DetLines.push_back(l.as_table());    
+            DetLines.push_back(l.as_table());
         }
     } catch(const exception &e) {
         cout << e.what() << "\nUsing default configuration!\n";
@@ -202,7 +87,7 @@ void KalmanTracker::UpdateConfig (string path_to_config) {
 };
 
 void KalmanTracker::DrawCV(Mat &img, bool with_det_lines=true) {
-    for (auto &t: this->Tracks){
+    for (auto &t: this->Tracks) {
         t.DrawCV(img);
     }
     if (with_det_lines) {
@@ -228,10 +113,12 @@ Mat KalmanTracker::calcHistRGB(Mat img) {
     return hist;
 }
 
-constexpr auto dst = [](Point2d p1,Point2d p2) {return sqrt((p1.x - p2.x)*(p1.x - p2.x) + (p1.y - p2.y)*(p1.y - p2.y));};
+constexpr auto dst = [](Point2d p1,Point2d p2) {
+    return sqrt((p1.x - p2.x)*(p1.x - p2.x) + (p1.y - p2.y)*(p1.y - p2.y));
+};
 
 void KalmanTracker::Register(list<Detection> dets, Mat &img) {
-    for (auto &d: dets) { 
+    for (auto &d: dets) {
         if (!d.appended) {
             // cout<< "New track from: " << d.get_center() << endl;
             auto NewTr = Track(d, this->maxPointsCount, this->maxNoMatch);
@@ -252,7 +139,7 @@ void KalmanTracker::Update(list<Detection> dets, Mat &img, float dt) {
         this->RemoveOldTracks();
         return;
     }
-    
+
     if (this->Tracks.size()==0) {
         this->Register(move(dets), img);
         return;
@@ -264,7 +151,7 @@ void KalmanTracker::Update(list<Detection> dets, Mat &img, float dt) {
         auto best_hist_score = histTreshold;
         auto best_det = dets.end();
         for (auto d = dets.begin(); d!=dets.end(); d++) {
-            if (tr.classId != d->classId) continue;
+            if (tr.prev_det.classId != d->classId) continue;
             if (d->appended) {
                 continue;
             }
@@ -281,7 +168,7 @@ void KalmanTracker::Update(list<Detection> dets, Mat &img, float dt) {
                 }
             }
         }
-        if (best_det != dets.end()){
+        if (best_det != dets.end()) {
             tr.Update(*best_det, dt);
             tr.prev_hist = (*histMap)[*best_det];
             best_det->appended = true;
@@ -297,6 +184,11 @@ void KalmanTracker::Update(list<Detection> dets, Mat &img, float dt) {
                     // cout << "Trak: ";
                     // ln.Print();
                     // ln.DrawCV(img);
+                    thread t = thread([&](){
+                        s->EndDetection("0",tr, img);
+                    }
+                    );
+                    t.detach();
                     cout << "Crossed!" << endl;
                     // @TODO: here should be sending through gRPC
                 }

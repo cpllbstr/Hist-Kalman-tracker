@@ -18,5 +18,5 @@ maxNoMatch = 5 # track lifetime(frames) without finding the next prediction
 detectClasses = [0,1,2,3,4]
 lines = [
     #{id =0, beg = [100, 100], end = [500, 500]},
-    {id=1, beg = [300, 700], end = [1500, 700]} 
+    {id=1, beg = [300, 700], end = [1700, 700]} 
 ]

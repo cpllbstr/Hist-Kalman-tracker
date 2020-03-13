@@ -1,42 +1,48 @@
+#pragma once
 #include <opencv2/opencv.hpp>
 #include <toml.hpp>
 
 using namespace cv;
 
 struct Detection {
-    public:
+public:
     int classId;
     float confidence;
     Rect bbox;
     bool appended =  false;
     Point2d get_center() {
-       return Point(bbox.x+int(bbox.width/2), bbox.y+int(bbox.height/2));
+        return Point(bbox.x+int(bbox.width/2), bbox.y+int(bbox.height/2));
     };
     bool operator==(const Detection &other) const {
-        return 
+        return
             this->classId == other.classId &&
             this->confidence == other.confidence &&
             this->bbox == other.bbox;
     };
+    Detection(const Detection &d) : 
+        classId(d.classId),
+        confidence(d.confidence),
+        bbox(d.bbox) 
+        {};
     Detection(): classId(0),  confidence(0.), bbox(Rect(0,0,0,0)) {};
 };
 
 namespace std {
 template<>
-struct hash<Detection>{
-    std::size_t operator()(const Detection& d) const{
-      // Compute individual hash values for first,
-      // second and third and combine them using XOR
-      // and bit shifting:
-      return (((hash<int>()(d.classId) ^ (hash<float>()(d.confidence) << 1)) >> 1) ^ 
-      (((hash<int>()(d.bbox.x)) ^ (hash<int>()(d.bbox.y)) <<1) ^ 
-      (hash<int>()(d.bbox.height)) ^ (hash<int>()(d.bbox.width))) >> 1);
+struct hash<Detection> {
+    std::size_t operator()(const Detection& d) const {
+        // Compute individual hash values for first,
+        // second and third and combine them using XOR
+        // and bit shifting:
+        return (((hash<int>()(d.classId) ^ (hash<float>()(d.confidence) << 1)) >> 1) ^
+                (((hash<int>()(d.bbox.x)) ^ (hash<int>()(d.bbox.y)) <<1) ^
+                 (hash<int>()(d.bbox.height)) ^ (hash<int>()(d.bbox.width))) >> 1);
     }
 };
 }
 
 class Line {
-    private:
+private:
     inline bool pointToTheRight(Point p) {
         return ((this->beg.x-this->end.x)*(p.y-this->end.y) - (this->beg.y-this->end.y)*(p.x-this->end.x)) > 0;
     }
@@ -51,7 +57,7 @@ class Line {
     Point ToVec() {
         return  end-beg;
     }
-    inline double cross(Point v1,Point v2){
+    inline double cross(Point v1,Point v2) {
         return v1.x*v2.y - v1.y*v2.x;
     }
     inline bool intersect(Line detl) {
@@ -64,9 +70,9 @@ class Line {
         auto v1 = detl.beg - this->beg;
         auto v2 = detl.end -this->beg;
         auto vecl = this->ToVec();
-        return  (sign(v1.x*vecl.y-vecl.x*v1.y) != sign(v2.x*vecl.y-vecl.x*v2.y)); 
+        return  (sign(v1.x*vecl.y-vecl.x*v1.y) != sign(v2.x*vecl.y-vecl.x*v2.y));
     }
-    public:
+public:
     int id;
     cv::Point2i beg, end;
     Line() : beg{0,0}, end{0,0}, id(0) {};
@@ -87,10 +93,10 @@ class Line {
     //returns true if lines crossed and this line's second point is to the right of detection line
     bool CrossedInDirection(Line detection_line) {
         return \
-        detection_line.pointInRange(this->beg) && \
-        this->intersect(detection_line) && \
-        detection_line.intersect(*this) && \
-        detection_line.pointToTheRight(this->end);
+               detection_line.pointInRange(this->beg) && \
+               this->intersect(detection_line) && \
+               detection_line.intersect(*this) && \
+               detection_line.pointToTheRight(this->end);
     }
 };
 
@@ -101,4 +107,4 @@ Line::Line(toml::table detline) {
     this->end = Point2i(p2[0].as_integer(), p2[1].as_integer());
     this->id = detline["id"].as_integer();
     std::cout << this->id << std::endl;
-} 
+}
