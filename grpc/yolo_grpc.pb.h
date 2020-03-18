@@ -47,7 +47,7 @@ struct TableStruct_yolo_5fgrpc_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxillaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[4]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[6]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -58,21 +58,29 @@ namespace yolo_grpc {
 class CamInfo;
 class CamInfoDefaultTypeInternal;
 extern CamInfoDefaultTypeInternal _CamInfo_default_instance_;
+class Config;
+class ConfigDefaultTypeInternal;
+extern ConfigDefaultTypeInternal _Config_default_instance_;
 class Detection;
 class DetectionDefaultTypeInternal;
 extern DetectionDefaultTypeInternal _Detection_default_instance_;
+class DetectionLine;
+class DetectionLineDefaultTypeInternal;
+extern DetectionLineDefaultTypeInternal _DetectionLine_default_instance_;
+class Point;
+class PointDefaultTypeInternal;
+extern PointDefaultTypeInternal _Point_default_instance_;
 class Response;
 class ResponseDefaultTypeInternal;
 extern ResponseDefaultTypeInternal _Response_default_instance_;
-class TrackPoint;
-class TrackPointDefaultTypeInternal;
-extern TrackPointDefaultTypeInternal _TrackPoint_default_instance_;
 }  // namespace yolo_grpc
 PROTOBUF_NAMESPACE_OPEN
 template<> ::yolo_grpc::CamInfo* Arena::CreateMaybeMessage<::yolo_grpc::CamInfo>(Arena*);
+template<> ::yolo_grpc::Config* Arena::CreateMaybeMessage<::yolo_grpc::Config>(Arena*);
 template<> ::yolo_grpc::Detection* Arena::CreateMaybeMessage<::yolo_grpc::Detection>(Arena*);
+template<> ::yolo_grpc::DetectionLine* Arena::CreateMaybeMessage<::yolo_grpc::DetectionLine>(Arena*);
+template<> ::yolo_grpc::Point* Arena::CreateMaybeMessage<::yolo_grpc::Point>(Arena*);
 template<> ::yolo_grpc::Response* Arena::CreateMaybeMessage<::yolo_grpc::Response>(Arena*);
-template<> ::yolo_grpc::TrackPoint* Arena::CreateMaybeMessage<::yolo_grpc::TrackPoint>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 namespace yolo_grpc {
 
@@ -190,22 +198,22 @@ class CamInfo :
     kDetectionFieldNumber = 4,
     kTimestampFieldNumber = 2,
   };
-  // repeated .yolo_grpc.TrackPoint track = 5;
+  // repeated .yolo_grpc.Point track = 5;
   int track_size() const;
   private:
   int _internal_track_size() const;
   public:
   void clear_track();
-  ::yolo_grpc::TrackPoint* mutable_track(int index);
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::yolo_grpc::TrackPoint >*
+  ::yolo_grpc::Point* mutable_track(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::yolo_grpc::Point >*
       mutable_track();
   private:
-  const ::yolo_grpc::TrackPoint& _internal_track(int index) const;
-  ::yolo_grpc::TrackPoint* _internal_add_track();
+  const ::yolo_grpc::Point& _internal_track(int index) const;
+  ::yolo_grpc::Point* _internal_add_track();
   public:
-  const ::yolo_grpc::TrackPoint& track(int index) const;
-  ::yolo_grpc::TrackPoint* add_track();
-  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::yolo_grpc::TrackPoint >&
+  const ::yolo_grpc::Point& track(int index) const;
+  ::yolo_grpc::Point* add_track();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::yolo_grpc::Point >&
       track() const;
 
   // string cam_id = 1;
@@ -269,7 +277,7 @@ class CamInfo :
   class _Internal;
 
   ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::yolo_grpc::TrackPoint > track_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::yolo_grpc::Point > track_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr cam_id_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr image_;
   ::yolo_grpc::Detection* detection_;
@@ -385,28 +393,12 @@ class Detection :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kLineIdFieldNumber = 5,
     kXLeftFieldNumber = 1,
     kYTopFieldNumber = 2,
     kHeightFieldNumber = 3,
     kWidthFieldNumber = 4,
+    kLineIdFieldNumber = 5,
   };
-  // string line_id = 5;
-  void clear_line_id();
-  const std::string& line_id() const;
-  void set_line_id(const std::string& value);
-  void set_line_id(std::string&& value);
-  void set_line_id(const char* value);
-  void set_line_id(const char* value, size_t size);
-  std::string* mutable_line_id();
-  std::string* release_line_id();
-  void set_allocated_line_id(std::string* line_id);
-  private:
-  const std::string& _internal_line_id() const;
-  void _internal_set_line_id(const std::string& value);
-  std::string* _internal_mutable_line_id();
-  public:
-
   // int32 x_left = 1;
   void clear_x_left();
   ::PROTOBUF_NAMESPACE_ID::int32 x_left() const;
@@ -443,38 +435,47 @@ class Detection :
   void _internal_set_width(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
+  // int32 line_id = 5;
+  void clear_line_id();
+  ::PROTOBUF_NAMESPACE_ID::int32 line_id() const;
+  void set_line_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_line_id() const;
+  void _internal_set_line_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
   // @@protoc_insertion_point(class_scope:yolo_grpc.Detection)
  private:
   class _Internal;
 
   ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr line_id_;
   ::PROTOBUF_NAMESPACE_ID::int32 x_left_;
   ::PROTOBUF_NAMESPACE_ID::int32 y_top_;
   ::PROTOBUF_NAMESPACE_ID::int32 height_;
   ::PROTOBUF_NAMESPACE_ID::int32 width_;
+  ::PROTOBUF_NAMESPACE_ID::int32 line_id_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_yolo_5fgrpc_2eproto;
 };
 // -------------------------------------------------------------------
 
-class TrackPoint :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:yolo_grpc.TrackPoint) */ {
+class Point :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:yolo_grpc.Point) */ {
  public:
-  TrackPoint();
-  virtual ~TrackPoint();
+  Point();
+  virtual ~Point();
 
-  TrackPoint(const TrackPoint& from);
-  TrackPoint(TrackPoint&& from) noexcept
-    : TrackPoint() {
+  Point(const Point& from);
+  Point(Point&& from) noexcept
+    : Point() {
     *this = ::std::move(from);
   }
 
-  inline TrackPoint& operator=(const TrackPoint& from) {
+  inline Point& operator=(const Point& from) {
     CopyFrom(from);
     return *this;
   }
-  inline TrackPoint& operator=(TrackPoint&& from) noexcept {
+  inline Point& operator=(Point&& from) noexcept {
     if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
       if (this != &from) InternalSwap(&from);
     } else {
@@ -492,37 +493,37 @@ class TrackPoint :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return GetMetadataStatic().reflection;
   }
-  static const TrackPoint& default_instance();
+  static const Point& default_instance();
 
   static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const TrackPoint* internal_default_instance() {
-    return reinterpret_cast<const TrackPoint*>(
-               &_TrackPoint_default_instance_);
+  static inline const Point* internal_default_instance() {
+    return reinterpret_cast<const Point*>(
+               &_Point_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     2;
 
-  friend void swap(TrackPoint& a, TrackPoint& b) {
+  friend void swap(Point& a, Point& b) {
     a.Swap(&b);
   }
-  inline void Swap(TrackPoint* other) {
+  inline void Swap(Point* other) {
     if (other == this) return;
     InternalSwap(other);
   }
 
   // implements Message ----------------------------------------------
 
-  inline TrackPoint* New() const final {
-    return CreateMaybeMessage<TrackPoint>(nullptr);
+  inline Point* New() const final {
+    return CreateMaybeMessage<Point>(nullptr);
   }
 
-  TrackPoint* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
-    return CreateMaybeMessage<TrackPoint>(arena);
+  Point* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<Point>(arena);
   }
   void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
   void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
-  void CopyFrom(const TrackPoint& from);
-  void MergeFrom(const TrackPoint& from);
+  void CopyFrom(const Point& from);
+  void MergeFrom(const Point& from);
   PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
   bool IsInitialized() const final;
 
@@ -536,10 +537,10 @@ class TrackPoint :
   inline void SharedCtor();
   inline void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(TrackPoint* other);
+  void InternalSwap(Point* other);
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "yolo_grpc.TrackPoint";
+    return "yolo_grpc.Point";
   }
   private:
   inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
@@ -585,7 +586,7 @@ class TrackPoint :
   void _internal_set_y(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
-  // @@protoc_insertion_point(class_scope:yolo_grpc.TrackPoint)
+  // @@protoc_insertion_point(class_scope:yolo_grpc.Point)
  private:
   class _Internal;
 
@@ -763,6 +764,323 @@ class Response :
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr message_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr warning_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr error_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_yolo_5fgrpc_2eproto;
+};
+// -------------------------------------------------------------------
+
+class Config :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:yolo_grpc.Config) */ {
+ public:
+  Config();
+  virtual ~Config();
+
+  Config(const Config& from);
+  Config(Config&& from) noexcept
+    : Config() {
+    *this = ::std::move(from);
+  }
+
+  inline Config& operator=(const Config& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline Config& operator=(Config&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const Config& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const Config* internal_default_instance() {
+    return reinterpret_cast<const Config*>(
+               &_Config_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    4;
+
+  friend void swap(Config& a, Config& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(Config* other) {
+    if (other == this) return;
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline Config* New() const final {
+    return CreateMaybeMessage<Config>(nullptr);
+  }
+
+  Config* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<Config>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const Config& from);
+  void MergeFrom(const Config& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(Config* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "yolo_grpc.Config";
+  }
+  private:
+  inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
+    return nullptr;
+  }
+  inline void* MaybeArenaPtr() const {
+    return nullptr;
+  }
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_yolo_5fgrpc_2eproto);
+    return ::descriptor_table_yolo_5fgrpc_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kDetectionLinesFieldNumber = 2,
+    kUidFieldNumber = 1,
+  };
+  // repeated .yolo_grpc.DetectionLine detection_lines = 2;
+  int detection_lines_size() const;
+  private:
+  int _internal_detection_lines_size() const;
+  public:
+  void clear_detection_lines();
+  ::yolo_grpc::DetectionLine* mutable_detection_lines(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::yolo_grpc::DetectionLine >*
+      mutable_detection_lines();
+  private:
+  const ::yolo_grpc::DetectionLine& _internal_detection_lines(int index) const;
+  ::yolo_grpc::DetectionLine* _internal_add_detection_lines();
+  public:
+  const ::yolo_grpc::DetectionLine& detection_lines(int index) const;
+  ::yolo_grpc::DetectionLine* add_detection_lines();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::yolo_grpc::DetectionLine >&
+      detection_lines() const;
+
+  // string uid = 1;
+  void clear_uid();
+  const std::string& uid() const;
+  void set_uid(const std::string& value);
+  void set_uid(std::string&& value);
+  void set_uid(const char* value);
+  void set_uid(const char* value, size_t size);
+  std::string* mutable_uid();
+  std::string* release_uid();
+  void set_allocated_uid(std::string* uid);
+  private:
+  const std::string& _internal_uid() const;
+  void _internal_set_uid(const std::string& value);
+  std::string* _internal_mutable_uid();
+  public:
+
+  // @@protoc_insertion_point(class_scope:yolo_grpc.Config)
+ private:
+  class _Internal;
+
+  ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::yolo_grpc::DetectionLine > detection_lines_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr uid_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_yolo_5fgrpc_2eproto;
+};
+// -------------------------------------------------------------------
+
+class DetectionLine :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:yolo_grpc.DetectionLine) */ {
+ public:
+  DetectionLine();
+  virtual ~DetectionLine();
+
+  DetectionLine(const DetectionLine& from);
+  DetectionLine(DetectionLine&& from) noexcept
+    : DetectionLine() {
+    *this = ::std::move(from);
+  }
+
+  inline DetectionLine& operator=(const DetectionLine& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline DetectionLine& operator=(DetectionLine&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const DetectionLine& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const DetectionLine* internal_default_instance() {
+    return reinterpret_cast<const DetectionLine*>(
+               &_DetectionLine_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    5;
+
+  friend void swap(DetectionLine& a, DetectionLine& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(DetectionLine* other) {
+    if (other == this) return;
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline DetectionLine* New() const final {
+    return CreateMaybeMessage<DetectionLine>(nullptr);
+  }
+
+  DetectionLine* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<DetectionLine>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const DetectionLine& from);
+  void MergeFrom(const DetectionLine& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(DetectionLine* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "yolo_grpc.DetectionLine";
+  }
+  private:
+  inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
+    return nullptr;
+  }
+  inline void* MaybeArenaPtr() const {
+    return nullptr;
+  }
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_yolo_5fgrpc_2eproto);
+    return ::descriptor_table_yolo_5fgrpc_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kBeginFieldNumber = 2,
+    kEndFieldNumber = 3,
+    kIdFieldNumber = 1,
+  };
+  // .yolo_grpc.Point begin = 2;
+  bool has_begin() const;
+  private:
+  bool _internal_has_begin() const;
+  public:
+  void clear_begin();
+  const ::yolo_grpc::Point& begin() const;
+  ::yolo_grpc::Point* release_begin();
+  ::yolo_grpc::Point* mutable_begin();
+  void set_allocated_begin(::yolo_grpc::Point* begin);
+  private:
+  const ::yolo_grpc::Point& _internal_begin() const;
+  ::yolo_grpc::Point* _internal_mutable_begin();
+  public:
+
+  // .yolo_grpc.Point end = 3;
+  bool has_end() const;
+  private:
+  bool _internal_has_end() const;
+  public:
+  void clear_end();
+  const ::yolo_grpc::Point& end() const;
+  ::yolo_grpc::Point* release_end();
+  ::yolo_grpc::Point* mutable_end();
+  void set_allocated_end(::yolo_grpc::Point* end);
+  private:
+  const ::yolo_grpc::Point& _internal_end() const;
+  ::yolo_grpc::Point* _internal_mutable_end();
+  public:
+
+  // int32 id = 1;
+  void clear_id();
+  ::PROTOBUF_NAMESPACE_ID::int32 id() const;
+  void set_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_id() const;
+  void _internal_set_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:yolo_grpc.DetectionLine)
+ private:
+  class _Internal;
+
+  ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
+  ::yolo_grpc::Point* begin_;
+  ::yolo_grpc::Point* end_;
+  ::PROTOBUF_NAMESPACE_ID::int32 id_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_yolo_5fgrpc_2eproto;
 };
@@ -977,7 +1295,7 @@ inline void CamInfo::set_allocated_detection(::yolo_grpc::Detection* detection) 
   // @@protoc_insertion_point(field_set_allocated:yolo_grpc.CamInfo.detection)
 }
 
-// repeated .yolo_grpc.TrackPoint track = 5;
+// repeated .yolo_grpc.Point track = 5;
 inline int CamInfo::_internal_track_size() const {
   return track_.size();
 }
@@ -987,30 +1305,30 @@ inline int CamInfo::track_size() const {
 inline void CamInfo::clear_track() {
   track_.Clear();
 }
-inline ::yolo_grpc::TrackPoint* CamInfo::mutable_track(int index) {
+inline ::yolo_grpc::Point* CamInfo::mutable_track(int index) {
   // @@protoc_insertion_point(field_mutable:yolo_grpc.CamInfo.track)
   return track_.Mutable(index);
 }
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::yolo_grpc::TrackPoint >*
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::yolo_grpc::Point >*
 CamInfo::mutable_track() {
   // @@protoc_insertion_point(field_mutable_list:yolo_grpc.CamInfo.track)
   return &track_;
 }
-inline const ::yolo_grpc::TrackPoint& CamInfo::_internal_track(int index) const {
+inline const ::yolo_grpc::Point& CamInfo::_internal_track(int index) const {
   return track_.Get(index);
 }
-inline const ::yolo_grpc::TrackPoint& CamInfo::track(int index) const {
+inline const ::yolo_grpc::Point& CamInfo::track(int index) const {
   // @@protoc_insertion_point(field_get:yolo_grpc.CamInfo.track)
   return _internal_track(index);
 }
-inline ::yolo_grpc::TrackPoint* CamInfo::_internal_add_track() {
+inline ::yolo_grpc::Point* CamInfo::_internal_add_track() {
   return track_.Add();
 }
-inline ::yolo_grpc::TrackPoint* CamInfo::add_track() {
+inline ::yolo_grpc::Point* CamInfo::add_track() {
   // @@protoc_insertion_point(field_add:yolo_grpc.CamInfo.track)
   return _internal_add_track();
 }
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::yolo_grpc::TrackPoint >&
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::yolo_grpc::Point >&
 CamInfo::track() const {
   // @@protoc_insertion_point(field_list:yolo_grpc.CamInfo.track)
   return track_;
@@ -1100,108 +1418,68 @@ inline void Detection::set_width(::PROTOBUF_NAMESPACE_ID::int32 value) {
   // @@protoc_insertion_point(field_set:yolo_grpc.Detection.width)
 }
 
-// string line_id = 5;
+// int32 line_id = 5;
 inline void Detection::clear_line_id() {
-  line_id_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  line_id_ = 0;
 }
-inline const std::string& Detection::line_id() const {
+inline ::PROTOBUF_NAMESPACE_ID::int32 Detection::_internal_line_id() const {
+  return line_id_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 Detection::line_id() const {
   // @@protoc_insertion_point(field_get:yolo_grpc.Detection.line_id)
   return _internal_line_id();
 }
-inline void Detection::set_line_id(const std::string& value) {
+inline void Detection::_internal_set_line_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  line_id_ = value;
+}
+inline void Detection::set_line_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
   _internal_set_line_id(value);
   // @@protoc_insertion_point(field_set:yolo_grpc.Detection.line_id)
-}
-inline std::string* Detection::mutable_line_id() {
-  // @@protoc_insertion_point(field_mutable:yolo_grpc.Detection.line_id)
-  return _internal_mutable_line_id();
-}
-inline const std::string& Detection::_internal_line_id() const {
-  return line_id_.GetNoArena();
-}
-inline void Detection::_internal_set_line_id(const std::string& value) {
-  
-  line_id_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
-}
-inline void Detection::set_line_id(std::string&& value) {
-  
-  line_id_.SetNoArena(
-    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:yolo_grpc.Detection.line_id)
-}
-inline void Detection::set_line_id(const char* value) {
-  GOOGLE_DCHECK(value != nullptr);
-  
-  line_id_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:yolo_grpc.Detection.line_id)
-}
-inline void Detection::set_line_id(const char* value, size_t size) {
-  
-  line_id_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:yolo_grpc.Detection.line_id)
-}
-inline std::string* Detection::_internal_mutable_line_id() {
-  
-  return line_id_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-}
-inline std::string* Detection::release_line_id() {
-  // @@protoc_insertion_point(field_release:yolo_grpc.Detection.line_id)
-  
-  return line_id_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-}
-inline void Detection::set_allocated_line_id(std::string* line_id) {
-  if (line_id != nullptr) {
-    
-  } else {
-    
-  }
-  line_id_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), line_id);
-  // @@protoc_insertion_point(field_set_allocated:yolo_grpc.Detection.line_id)
 }
 
 // -------------------------------------------------------------------
 
-// TrackPoint
+// Point
 
 // int32 x = 1;
-inline void TrackPoint::clear_x() {
+inline void Point::clear_x() {
   x_ = 0;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 TrackPoint::_internal_x() const {
+inline ::PROTOBUF_NAMESPACE_ID::int32 Point::_internal_x() const {
   return x_;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 TrackPoint::x() const {
-  // @@protoc_insertion_point(field_get:yolo_grpc.TrackPoint.x)
+inline ::PROTOBUF_NAMESPACE_ID::int32 Point::x() const {
+  // @@protoc_insertion_point(field_get:yolo_grpc.Point.x)
   return _internal_x();
 }
-inline void TrackPoint::_internal_set_x(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void Point::_internal_set_x(::PROTOBUF_NAMESPACE_ID::int32 value) {
   
   x_ = value;
 }
-inline void TrackPoint::set_x(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void Point::set_x(::PROTOBUF_NAMESPACE_ID::int32 value) {
   _internal_set_x(value);
-  // @@protoc_insertion_point(field_set:yolo_grpc.TrackPoint.x)
+  // @@protoc_insertion_point(field_set:yolo_grpc.Point.x)
 }
 
 // int32 y = 2;
-inline void TrackPoint::clear_y() {
+inline void Point::clear_y() {
   y_ = 0;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 TrackPoint::_internal_y() const {
+inline ::PROTOBUF_NAMESPACE_ID::int32 Point::_internal_y() const {
   return y_;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 TrackPoint::y() const {
-  // @@protoc_insertion_point(field_get:yolo_grpc.TrackPoint.y)
+inline ::PROTOBUF_NAMESPACE_ID::int32 Point::y() const {
+  // @@protoc_insertion_point(field_get:yolo_grpc.Point.y)
   return _internal_y();
 }
-inline void TrackPoint::_internal_set_y(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void Point::_internal_set_y(::PROTOBUF_NAMESPACE_ID::int32 value) {
   
   y_ = value;
 }
-inline void TrackPoint::set_y(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void Point::set_y(::PROTOBUF_NAMESPACE_ID::int32 value) {
   _internal_set_y(value);
-  // @@protoc_insertion_point(field_set:yolo_grpc.TrackPoint.y)
+  // @@protoc_insertion_point(field_set:yolo_grpc.Point.y)
 }
 
 // -------------------------------------------------------------------
@@ -1388,9 +1666,260 @@ inline void Response::set_allocated_error(std::string* error) {
   // @@protoc_insertion_point(field_set_allocated:yolo_grpc.Response.error)
 }
 
+// -------------------------------------------------------------------
+
+// Config
+
+// string uid = 1;
+inline void Config::clear_uid() {
+  uid_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline const std::string& Config::uid() const {
+  // @@protoc_insertion_point(field_get:yolo_grpc.Config.uid)
+  return _internal_uid();
+}
+inline void Config::set_uid(const std::string& value) {
+  _internal_set_uid(value);
+  // @@protoc_insertion_point(field_set:yolo_grpc.Config.uid)
+}
+inline std::string* Config::mutable_uid() {
+  // @@protoc_insertion_point(field_mutable:yolo_grpc.Config.uid)
+  return _internal_mutable_uid();
+}
+inline const std::string& Config::_internal_uid() const {
+  return uid_.GetNoArena();
+}
+inline void Config::_internal_set_uid(const std::string& value) {
+  
+  uid_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
+}
+inline void Config::set_uid(std::string&& value) {
+  
+  uid_.SetNoArena(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:yolo_grpc.Config.uid)
+}
+inline void Config::set_uid(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  uid_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:yolo_grpc.Config.uid)
+}
+inline void Config::set_uid(const char* value, size_t size) {
+  
+  uid_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:yolo_grpc.Config.uid)
+}
+inline std::string* Config::_internal_mutable_uid() {
+  
+  return uid_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline std::string* Config::release_uid() {
+  // @@protoc_insertion_point(field_release:yolo_grpc.Config.uid)
+  
+  return uid_.ReleaseNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+inline void Config::set_allocated_uid(std::string* uid) {
+  if (uid != nullptr) {
+    
+  } else {
+    
+  }
+  uid_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), uid);
+  // @@protoc_insertion_point(field_set_allocated:yolo_grpc.Config.uid)
+}
+
+// repeated .yolo_grpc.DetectionLine detection_lines = 2;
+inline int Config::_internal_detection_lines_size() const {
+  return detection_lines_.size();
+}
+inline int Config::detection_lines_size() const {
+  return _internal_detection_lines_size();
+}
+inline void Config::clear_detection_lines() {
+  detection_lines_.Clear();
+}
+inline ::yolo_grpc::DetectionLine* Config::mutable_detection_lines(int index) {
+  // @@protoc_insertion_point(field_mutable:yolo_grpc.Config.detection_lines)
+  return detection_lines_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::yolo_grpc::DetectionLine >*
+Config::mutable_detection_lines() {
+  // @@protoc_insertion_point(field_mutable_list:yolo_grpc.Config.detection_lines)
+  return &detection_lines_;
+}
+inline const ::yolo_grpc::DetectionLine& Config::_internal_detection_lines(int index) const {
+  return detection_lines_.Get(index);
+}
+inline const ::yolo_grpc::DetectionLine& Config::detection_lines(int index) const {
+  // @@protoc_insertion_point(field_get:yolo_grpc.Config.detection_lines)
+  return _internal_detection_lines(index);
+}
+inline ::yolo_grpc::DetectionLine* Config::_internal_add_detection_lines() {
+  return detection_lines_.Add();
+}
+inline ::yolo_grpc::DetectionLine* Config::add_detection_lines() {
+  // @@protoc_insertion_point(field_add:yolo_grpc.Config.detection_lines)
+  return _internal_add_detection_lines();
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::yolo_grpc::DetectionLine >&
+Config::detection_lines() const {
+  // @@protoc_insertion_point(field_list:yolo_grpc.Config.detection_lines)
+  return detection_lines_;
+}
+
+// -------------------------------------------------------------------
+
+// DetectionLine
+
+// int32 id = 1;
+inline void DetectionLine::clear_id() {
+  id_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 DetectionLine::_internal_id() const {
+  return id_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 DetectionLine::id() const {
+  // @@protoc_insertion_point(field_get:yolo_grpc.DetectionLine.id)
+  return _internal_id();
+}
+inline void DetectionLine::_internal_set_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  id_ = value;
+}
+inline void DetectionLine::set_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_id(value);
+  // @@protoc_insertion_point(field_set:yolo_grpc.DetectionLine.id)
+}
+
+// .yolo_grpc.Point begin = 2;
+inline bool DetectionLine::_internal_has_begin() const {
+  return this != internal_default_instance() && begin_ != nullptr;
+}
+inline bool DetectionLine::has_begin() const {
+  return _internal_has_begin();
+}
+inline void DetectionLine::clear_begin() {
+  if (GetArenaNoVirtual() == nullptr && begin_ != nullptr) {
+    delete begin_;
+  }
+  begin_ = nullptr;
+}
+inline const ::yolo_grpc::Point& DetectionLine::_internal_begin() const {
+  const ::yolo_grpc::Point* p = begin_;
+  return p != nullptr ? *p : *reinterpret_cast<const ::yolo_grpc::Point*>(
+      &::yolo_grpc::_Point_default_instance_);
+}
+inline const ::yolo_grpc::Point& DetectionLine::begin() const {
+  // @@protoc_insertion_point(field_get:yolo_grpc.DetectionLine.begin)
+  return _internal_begin();
+}
+inline ::yolo_grpc::Point* DetectionLine::release_begin() {
+  // @@protoc_insertion_point(field_release:yolo_grpc.DetectionLine.begin)
+  
+  ::yolo_grpc::Point* temp = begin_;
+  begin_ = nullptr;
+  return temp;
+}
+inline ::yolo_grpc::Point* DetectionLine::_internal_mutable_begin() {
+  
+  if (begin_ == nullptr) {
+    auto* p = CreateMaybeMessage<::yolo_grpc::Point>(GetArenaNoVirtual());
+    begin_ = p;
+  }
+  return begin_;
+}
+inline ::yolo_grpc::Point* DetectionLine::mutable_begin() {
+  // @@protoc_insertion_point(field_mutable:yolo_grpc.DetectionLine.begin)
+  return _internal_mutable_begin();
+}
+inline void DetectionLine::set_allocated_begin(::yolo_grpc::Point* begin) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaNoVirtual();
+  if (message_arena == nullptr) {
+    delete begin_;
+  }
+  if (begin) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena = nullptr;
+    if (message_arena != submessage_arena) {
+      begin = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, begin, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  begin_ = begin;
+  // @@protoc_insertion_point(field_set_allocated:yolo_grpc.DetectionLine.begin)
+}
+
+// .yolo_grpc.Point end = 3;
+inline bool DetectionLine::_internal_has_end() const {
+  return this != internal_default_instance() && end_ != nullptr;
+}
+inline bool DetectionLine::has_end() const {
+  return _internal_has_end();
+}
+inline void DetectionLine::clear_end() {
+  if (GetArenaNoVirtual() == nullptr && end_ != nullptr) {
+    delete end_;
+  }
+  end_ = nullptr;
+}
+inline const ::yolo_grpc::Point& DetectionLine::_internal_end() const {
+  const ::yolo_grpc::Point* p = end_;
+  return p != nullptr ? *p : *reinterpret_cast<const ::yolo_grpc::Point*>(
+      &::yolo_grpc::_Point_default_instance_);
+}
+inline const ::yolo_grpc::Point& DetectionLine::end() const {
+  // @@protoc_insertion_point(field_get:yolo_grpc.DetectionLine.end)
+  return _internal_end();
+}
+inline ::yolo_grpc::Point* DetectionLine::release_end() {
+  // @@protoc_insertion_point(field_release:yolo_grpc.DetectionLine.end)
+  
+  ::yolo_grpc::Point* temp = end_;
+  end_ = nullptr;
+  return temp;
+}
+inline ::yolo_grpc::Point* DetectionLine::_internal_mutable_end() {
+  
+  if (end_ == nullptr) {
+    auto* p = CreateMaybeMessage<::yolo_grpc::Point>(GetArenaNoVirtual());
+    end_ = p;
+  }
+  return end_;
+}
+inline ::yolo_grpc::Point* DetectionLine::mutable_end() {
+  // @@protoc_insertion_point(field_mutable:yolo_grpc.DetectionLine.end)
+  return _internal_mutable_end();
+}
+inline void DetectionLine::set_allocated_end(::yolo_grpc::Point* end) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaNoVirtual();
+  if (message_arena == nullptr) {
+    delete end_;
+  }
+  if (end) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena = nullptr;
+    if (message_arena != submessage_arena) {
+      end = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, end, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  end_ = end;
+  // @@protoc_insertion_point(field_set_allocated:yolo_grpc.DetectionLine.end)
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

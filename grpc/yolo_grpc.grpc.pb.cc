@@ -22,7 +22,9 @@
 namespace yolo_grpc {
 
 static const char* STYolo_method_names[] = {
-  "/yolo_grpc.STYolo/EndDetection",
+  "/yolo_grpc.STYolo/SendDetection",
+  "/yolo_grpc.STYolo/ConfigUpdater",
+  "/yolo_grpc.STYolo/SetConfig",
 };
 
 std::unique_ptr< STYolo::Stub> STYolo::NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options) {
@@ -32,35 +34,81 @@ std::unique_ptr< STYolo::Stub> STYolo::NewStub(const std::shared_ptr< ::grpc::Ch
 }
 
 STYolo::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel)
-  : channel_(channel), rpcmethod_EndDetection_(STYolo_method_names[0], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  : channel_(channel), rpcmethod_SendDetection_(STYolo_method_names[0], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_ConfigUpdater_(STYolo_method_names[1], ::grpc::internal::RpcMethod::BIDI_STREAMING, channel)
+  , rpcmethod_SetConfig_(STYolo_method_names[2], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   {}
 
-::grpc::Status STYolo::Stub::EndDetection(::grpc::ClientContext* context, const ::yolo_grpc::CamInfo& request, ::yolo_grpc::Response* response) {
-  return ::grpc::internal::BlockingUnaryCall(channel_.get(), rpcmethod_EndDetection_, context, request, response);
+::grpc::Status STYolo::Stub::SendDetection(::grpc::ClientContext* context, const ::yolo_grpc::CamInfo& request, ::yolo_grpc::Response* response) {
+  return ::grpc::internal::BlockingUnaryCall(channel_.get(), rpcmethod_SendDetection_, context, request, response);
 }
 
-void STYolo::Stub::experimental_async::EndDetection(::grpc::ClientContext* context, const ::yolo_grpc::CamInfo* request, ::yolo_grpc::Response* response, std::function<void(::grpc::Status)> f) {
-  ::grpc_impl::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_EndDetection_, context, request, response, std::move(f));
+void STYolo::Stub::experimental_async::SendDetection(::grpc::ClientContext* context, const ::yolo_grpc::CamInfo* request, ::yolo_grpc::Response* response, std::function<void(::grpc::Status)> f) {
+  ::grpc_impl::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_SendDetection_, context, request, response, std::move(f));
 }
 
-void STYolo::Stub::experimental_async::EndDetection(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::yolo_grpc::Response* response, std::function<void(::grpc::Status)> f) {
-  ::grpc_impl::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_EndDetection_, context, request, response, std::move(f));
+void STYolo::Stub::experimental_async::SendDetection(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::yolo_grpc::Response* response, std::function<void(::grpc::Status)> f) {
+  ::grpc_impl::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_SendDetection_, context, request, response, std::move(f));
 }
 
-void STYolo::Stub::experimental_async::EndDetection(::grpc::ClientContext* context, const ::yolo_grpc::CamInfo* request, ::yolo_grpc::Response* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
-  ::grpc_impl::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_EndDetection_, context, request, response, reactor);
+void STYolo::Stub::experimental_async::SendDetection(::grpc::ClientContext* context, const ::yolo_grpc::CamInfo* request, ::yolo_grpc::Response* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
+  ::grpc_impl::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_SendDetection_, context, request, response, reactor);
 }
 
-void STYolo::Stub::experimental_async::EndDetection(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::yolo_grpc::Response* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
-  ::grpc_impl::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_EndDetection_, context, request, response, reactor);
+void STYolo::Stub::experimental_async::SendDetection(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::yolo_grpc::Response* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
+  ::grpc_impl::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_SendDetection_, context, request, response, reactor);
 }
 
-::grpc::ClientAsyncResponseReader< ::yolo_grpc::Response>* STYolo::Stub::AsyncEndDetectionRaw(::grpc::ClientContext* context, const ::yolo_grpc::CamInfo& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::yolo_grpc::Response>::Create(channel_.get(), cq, rpcmethod_EndDetection_, context, request, true);
+::grpc::ClientAsyncResponseReader< ::yolo_grpc::Response>* STYolo::Stub::AsyncSendDetectionRaw(::grpc::ClientContext* context, const ::yolo_grpc::CamInfo& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::yolo_grpc::Response>::Create(channel_.get(), cq, rpcmethod_SendDetection_, context, request, true);
 }
 
-::grpc::ClientAsyncResponseReader< ::yolo_grpc::Response>* STYolo::Stub::PrepareAsyncEndDetectionRaw(::grpc::ClientContext* context, const ::yolo_grpc::CamInfo& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::yolo_grpc::Response>::Create(channel_.get(), cq, rpcmethod_EndDetection_, context, request, false);
+::grpc::ClientAsyncResponseReader< ::yolo_grpc::Response>* STYolo::Stub::PrepareAsyncSendDetectionRaw(::grpc::ClientContext* context, const ::yolo_grpc::CamInfo& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::yolo_grpc::Response>::Create(channel_.get(), cq, rpcmethod_SendDetection_, context, request, false);
+}
+
+::grpc::ClientReaderWriter< ::yolo_grpc::Response, ::yolo_grpc::Config>* STYolo::Stub::ConfigUpdaterRaw(::grpc::ClientContext* context) {
+  return ::grpc_impl::internal::ClientReaderWriterFactory< ::yolo_grpc::Response, ::yolo_grpc::Config>::Create(channel_.get(), rpcmethod_ConfigUpdater_, context);
+}
+
+void STYolo::Stub::experimental_async::ConfigUpdater(::grpc::ClientContext* context, ::grpc::experimental::ClientBidiReactor< ::yolo_grpc::Response,::yolo_grpc::Config>* reactor) {
+  ::grpc_impl::internal::ClientCallbackReaderWriterFactory< ::yolo_grpc::Response,::yolo_grpc::Config>::Create(stub_->channel_.get(), stub_->rpcmethod_ConfigUpdater_, context, reactor);
+}
+
+::grpc::ClientAsyncReaderWriter< ::yolo_grpc::Response, ::yolo_grpc::Config>* STYolo::Stub::AsyncConfigUpdaterRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq, void* tag) {
+  return ::grpc_impl::internal::ClientAsyncReaderWriterFactory< ::yolo_grpc::Response, ::yolo_grpc::Config>::Create(channel_.get(), cq, rpcmethod_ConfigUpdater_, context, true, tag);
+}
+
+::grpc::ClientAsyncReaderWriter< ::yolo_grpc::Response, ::yolo_grpc::Config>* STYolo::Stub::PrepareAsyncConfigUpdaterRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq) {
+  return ::grpc_impl::internal::ClientAsyncReaderWriterFactory< ::yolo_grpc::Response, ::yolo_grpc::Config>::Create(channel_.get(), cq, rpcmethod_ConfigUpdater_, context, false, nullptr);
+}
+
+::grpc::Status STYolo::Stub::SetConfig(::grpc::ClientContext* context, const ::yolo_grpc::Config& request, ::yolo_grpc::Response* response) {
+  return ::grpc::internal::BlockingUnaryCall(channel_.get(), rpcmethod_SetConfig_, context, request, response);
+}
+
+void STYolo::Stub::experimental_async::SetConfig(::grpc::ClientContext* context, const ::yolo_grpc::Config* request, ::yolo_grpc::Response* response, std::function<void(::grpc::Status)> f) {
+  ::grpc_impl::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_SetConfig_, context, request, response, std::move(f));
+}
+
+void STYolo::Stub::experimental_async::SetConfig(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::yolo_grpc::Response* response, std::function<void(::grpc::Status)> f) {
+  ::grpc_impl::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_SetConfig_, context, request, response, std::move(f));
+}
+
+void STYolo::Stub::experimental_async::SetConfig(::grpc::ClientContext* context, const ::yolo_grpc::Config* request, ::yolo_grpc::Response* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
+  ::grpc_impl::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_SetConfig_, context, request, response, reactor);
+}
+
+void STYolo::Stub::experimental_async::SetConfig(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::yolo_grpc::Response* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
+  ::grpc_impl::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_SetConfig_, context, request, response, reactor);
+}
+
+::grpc::ClientAsyncResponseReader< ::yolo_grpc::Response>* STYolo::Stub::AsyncSetConfigRaw(::grpc::ClientContext* context, const ::yolo_grpc::Config& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::yolo_grpc::Response>::Create(channel_.get(), cq, rpcmethod_SetConfig_, context, request, true);
+}
+
+::grpc::ClientAsyncResponseReader< ::yolo_grpc::Response>* STYolo::Stub::PrepareAsyncSetConfigRaw(::grpc::ClientContext* context, const ::yolo_grpc::Config& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::yolo_grpc::Response>::Create(channel_.get(), cq, rpcmethod_SetConfig_, context, request, false);
 }
 
 STYolo::Service::Service() {
@@ -68,13 +116,36 @@ STYolo::Service::Service() {
       STYolo_method_names[0],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< STYolo::Service, ::yolo_grpc::CamInfo, ::yolo_grpc::Response>(
-          std::mem_fn(&STYolo::Service::EndDetection), this)));
+          std::mem_fn(&STYolo::Service::SendDetection), this)));
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
+      STYolo_method_names[1],
+      ::grpc::internal::RpcMethod::BIDI_STREAMING,
+      new ::grpc::internal::BidiStreamingHandler< STYolo::Service, ::yolo_grpc::Response, ::yolo_grpc::Config>(
+          std::mem_fn(&STYolo::Service::ConfigUpdater), this)));
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
+      STYolo_method_names[2],
+      ::grpc::internal::RpcMethod::NORMAL_RPC,
+      new ::grpc::internal::RpcMethodHandler< STYolo::Service, ::yolo_grpc::Config, ::yolo_grpc::Response>(
+          std::mem_fn(&STYolo::Service::SetConfig), this)));
 }
 
 STYolo::Service::~Service() {
 }
 
-::grpc::Status STYolo::Service::EndDetection(::grpc::ServerContext* context, const ::yolo_grpc::CamInfo* request, ::yolo_grpc::Response* response) {
+::grpc::Status STYolo::Service::SendDetection(::grpc::ServerContext* context, const ::yolo_grpc::CamInfo* request, ::yolo_grpc::Response* response) {
+  (void) context;
+  (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+::grpc::Status STYolo::Service::ConfigUpdater(::grpc::ServerContext* context, ::grpc::ServerReaderWriter< ::yolo_grpc::Config, ::yolo_grpc::Response>* stream) {
+  (void) context;
+  (void) stream;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+::grpc::Status STYolo::Service::SetConfig(::grpc::ServerContext* context, const ::yolo_grpc::Config* request, ::yolo_grpc::Response* response) {
   (void) context;
   (void) request;
   (void) response;

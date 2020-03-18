@@ -42,6 +42,7 @@ public:
             throw EnvVarException();
         }
         this->s = unique_ptr<STYoloClient>(new STYoloClient(grpc::CreateChannel(ip_addr, grpc::InsecureChannelCredentials())));
+        s->ConfigUpdater();
     }
 
     void RemoveOldTracks() {
@@ -185,7 +186,7 @@ void KalmanTracker::Update(list<Detection> dets, Mat &img, float dt) {
                     // ln.Print();
                     // ln.DrawCV(img);
                     thread t = thread([&](){
-                        s->EndDetection("0",tr, img);
+                        s->SendDetection("0", lin.id,tr, img);
                     }
                     );
                     t.detach();

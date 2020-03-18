@@ -302,7 +302,7 @@ void process_video(string vid) {
 
     KalmanTracker ktr;
     // Process frames.
-
+    
     ktr.UpdateConfig("./config.toml");
     cout << ktr.histTreshold << ktr.maxNoMatch << ktr.maxPointsCount << ktr.tresholdDist << endl;
     

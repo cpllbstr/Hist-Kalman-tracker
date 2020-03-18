@@ -15,7 +15,8 @@
 // @@protoc_insertion_point(includes)
 #include <google/protobuf/port_def.inc>
 extern PROTOBUF_INTERNAL_EXPORT_yolo_5fgrpc_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_Detection_yolo_5fgrpc_2eproto;
-extern PROTOBUF_INTERNAL_EXPORT_yolo_5fgrpc_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_TrackPoint_yolo_5fgrpc_2eproto;
+extern PROTOBUF_INTERNAL_EXPORT_yolo_5fgrpc_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<1> scc_info_DetectionLine_yolo_5fgrpc_2eproto;
+extern PROTOBUF_INTERNAL_EXPORT_yolo_5fgrpc_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_Point_yolo_5fgrpc_2eproto;
 namespace yolo_grpc {
 class CamInfoDefaultTypeInternal {
  public:
@@ -25,14 +26,22 @@ class DetectionDefaultTypeInternal {
  public:
   ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<Detection> _instance;
 } _Detection_default_instance_;
-class TrackPointDefaultTypeInternal {
+class PointDefaultTypeInternal {
  public:
-  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<TrackPoint> _instance;
-} _TrackPoint_default_instance_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<Point> _instance;
+} _Point_default_instance_;
 class ResponseDefaultTypeInternal {
  public:
   ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<Response> _instance;
 } _Response_default_instance_;
+class ConfigDefaultTypeInternal {
+ public:
+  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<Config> _instance;
+} _Config_default_instance_;
+class DetectionLineDefaultTypeInternal {
+ public:
+  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<DetectionLine> _instance;
+} _DetectionLine_default_instance_;
 }  // namespace yolo_grpc
 static void InitDefaultsscc_info_CamInfo_yolo_5fgrpc_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
@@ -48,7 +57,22 @@ static void InitDefaultsscc_info_CamInfo_yolo_5fgrpc_2eproto() {
 ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<2> scc_info_CamInfo_yolo_5fgrpc_2eproto =
     {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 2, 0, InitDefaultsscc_info_CamInfo_yolo_5fgrpc_2eproto}, {
       &scc_info_Detection_yolo_5fgrpc_2eproto.base,
-      &scc_info_TrackPoint_yolo_5fgrpc_2eproto.base,}};
+      &scc_info_Point_yolo_5fgrpc_2eproto.base,}};
+
+static void InitDefaultsscc_info_Config_yolo_5fgrpc_2eproto() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::yolo_grpc::_Config_default_instance_;
+    new (ptr) ::yolo_grpc::Config();
+    ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
+  }
+  ::yolo_grpc::Config::InitAsDefaultInstance();
+}
+
+::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<1> scc_info_Config_yolo_5fgrpc_2eproto =
+    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 1, 0, InitDefaultsscc_info_Config_yolo_5fgrpc_2eproto}, {
+      &scc_info_DetectionLine_yolo_5fgrpc_2eproto.base,}};
 
 static void InitDefaultsscc_info_Detection_yolo_5fgrpc_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
@@ -64,6 +88,35 @@ static void InitDefaultsscc_info_Detection_yolo_5fgrpc_2eproto() {
 ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_Detection_yolo_5fgrpc_2eproto =
     {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_Detection_yolo_5fgrpc_2eproto}, {}};
 
+static void InitDefaultsscc_info_DetectionLine_yolo_5fgrpc_2eproto() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::yolo_grpc::_DetectionLine_default_instance_;
+    new (ptr) ::yolo_grpc::DetectionLine();
+    ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
+  }
+  ::yolo_grpc::DetectionLine::InitAsDefaultInstance();
+}
+
+::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<1> scc_info_DetectionLine_yolo_5fgrpc_2eproto =
+    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 1, 0, InitDefaultsscc_info_DetectionLine_yolo_5fgrpc_2eproto}, {
+      &scc_info_Point_yolo_5fgrpc_2eproto.base,}};
+
+static void InitDefaultsscc_info_Point_yolo_5fgrpc_2eproto() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::yolo_grpc::_Point_default_instance_;
+    new (ptr) ::yolo_grpc::Point();
+    ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
+  }
+  ::yolo_grpc::Point::InitAsDefaultInstance();
+}
+
+::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_Point_yolo_5fgrpc_2eproto =
+    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_Point_yolo_5fgrpc_2eproto}, {}};
+
 static void InitDefaultsscc_info_Response_yolo_5fgrpc_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
@@ -78,21 +131,7 @@ static void InitDefaultsscc_info_Response_yolo_5fgrpc_2eproto() {
 ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_Response_yolo_5fgrpc_2eproto =
     {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_Response_yolo_5fgrpc_2eproto}, {}};
 
-static void InitDefaultsscc_info_TrackPoint_yolo_5fgrpc_2eproto() {
-  GOOGLE_PROTOBUF_VERIFY_VERSION;
-
-  {
-    void* ptr = &::yolo_grpc::_TrackPoint_default_instance_;
-    new (ptr) ::yolo_grpc::TrackPoint();
-    ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
-  }
-  ::yolo_grpc::TrackPoint::InitAsDefaultInstance();
-}
-
-::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_TrackPoint_yolo_5fgrpc_2eproto =
-    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_TrackPoint_yolo_5fgrpc_2eproto}, {}};
-
-static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_yolo_5fgrpc_2eproto[4];
+static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_yolo_5fgrpc_2eproto[6];
 static constexpr ::PROTOBUF_NAMESPACE_ID::EnumDescriptor const** file_level_enum_descriptors_yolo_5fgrpc_2eproto = nullptr;
 static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_yolo_5fgrpc_2eproto = nullptr;
 
@@ -118,12 +157,12 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_yolo_5fgrpc_2eproto::offsets[]
   PROTOBUF_FIELD_OFFSET(::yolo_grpc::Detection, width_),
   PROTOBUF_FIELD_OFFSET(::yolo_grpc::Detection, line_id_),
   ~0u,  // no _has_bits_
-  PROTOBUF_FIELD_OFFSET(::yolo_grpc::TrackPoint, _internal_metadata_),
+  PROTOBUF_FIELD_OFFSET(::yolo_grpc::Point, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::yolo_grpc::TrackPoint, x_),
-  PROTOBUF_FIELD_OFFSET(::yolo_grpc::TrackPoint, y_),
+  PROTOBUF_FIELD_OFFSET(::yolo_grpc::Point, x_),
+  PROTOBUF_FIELD_OFFSET(::yolo_grpc::Point, y_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::yolo_grpc::Response, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -132,49 +171,77 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_yolo_5fgrpc_2eproto::offsets[]
   PROTOBUF_FIELD_OFFSET(::yolo_grpc::Response, message_),
   PROTOBUF_FIELD_OFFSET(::yolo_grpc::Response, warning_),
   PROTOBUF_FIELD_OFFSET(::yolo_grpc::Response, error_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::yolo_grpc::Config, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  PROTOBUF_FIELD_OFFSET(::yolo_grpc::Config, uid_),
+  PROTOBUF_FIELD_OFFSET(::yolo_grpc::Config, detection_lines_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::yolo_grpc::DetectionLine, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  PROTOBUF_FIELD_OFFSET(::yolo_grpc::DetectionLine, id_),
+  PROTOBUF_FIELD_OFFSET(::yolo_grpc::DetectionLine, begin_),
+  PROTOBUF_FIELD_OFFSET(::yolo_grpc::DetectionLine, end_),
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, sizeof(::yolo_grpc::CamInfo)},
   { 10, -1, sizeof(::yolo_grpc::Detection)},
-  { 20, -1, sizeof(::yolo_grpc::TrackPoint)},
+  { 20, -1, sizeof(::yolo_grpc::Point)},
   { 27, -1, sizeof(::yolo_grpc::Response)},
+  { 35, -1, sizeof(::yolo_grpc::Config)},
+  { 42, -1, sizeof(::yolo_grpc::DetectionLine)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::yolo_grpc::_CamInfo_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::yolo_grpc::_Detection_default_instance_),
-  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::yolo_grpc::_TrackPoint_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::yolo_grpc::_Point_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::yolo_grpc::_Response_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::yolo_grpc::_Config_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::yolo_grpc::_DetectionLine_default_instance_),
 };
 
 const char descriptor_table_protodef_yolo_5fgrpc_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
-  "\n\017yolo_grpc.proto\022\tyolo_grpc\"\212\001\n\007CamInfo"
+  "\n\017yolo_grpc.proto\022\tyolo_grpc\"\205\001\n\007CamInfo"
   "\022\016\n\006cam_id\030\001 \001(\t\022\021\n\ttimestamp\030\002 \001(\003\022\r\n\005i"
   "mage\030\003 \001(\014\022\'\n\tdetection\030\004 \001(\0132\024.yolo_grp"
-  "c.Detection\022$\n\005track\030\005 \003(\0132\025.yolo_grpc.T"
-  "rackPoint\"Z\n\tDetection\022\016\n\006x_left\030\001 \001(\005\022\r"
-  "\n\005y_top\030\002 \001(\005\022\016\n\006height\030\003 \001(\005\022\r\n\005width\030\004"
-  " \001(\005\022\017\n\007line_id\030\005 \001(\t\"\"\n\nTrackPoint\022\t\n\001x"
-  "\030\001 \001(\005\022\t\n\001y\030\002 \001(\005\";\n\010Response\022\017\n\007message"
-  "\030\001 \001(\t\022\017\n\007warning\030\002 \001(\t\022\r\n\005error\030\003 \001(\t2C"
-  "\n\006STYolo\0229\n\014EndDetection\022\022.yolo_grpc.Cam"
-  "Info\032\023.yolo_grpc.Response\"\000b\006proto3"
+  "c.Detection\022\037\n\005track\030\005 \003(\0132\020.yolo_grpc.P"
+  "oint\"Z\n\tDetection\022\016\n\006x_left\030\001 \001(\005\022\r\n\005y_t"
+  "op\030\002 \001(\005\022\016\n\006height\030\003 \001(\005\022\r\n\005width\030\004 \001(\005\022"
+  "\017\n\007line_id\030\005 \001(\005\"\035\n\005Point\022\t\n\001x\030\001 \001(\005\022\t\n\001"
+  "y\030\002 \001(\005\";\n\010Response\022\017\n\007message\030\001 \001(\t\022\017\n\007"
+  "warning\030\002 \001(\t\022\r\n\005error\030\003 \001(\t\"H\n\006Config\022\013"
+  "\n\003uid\030\001 \001(\t\0221\n\017detection_lines\030\002 \003(\0132\030.y"
+  "olo_grpc.DetectionLine\"[\n\rDetectionLine\022"
+  "\n\n\002id\030\001 \001(\005\022\037\n\005begin\030\002 \001(\0132\020.yolo_grpc.P"
+  "oint\022\035\n\003end\030\003 \001(\0132\020.yolo_grpc.Point2\272\001\n\006"
+  "STYolo\022:\n\rSendDetection\022\022.yolo_grpc.CamI"
+  "nfo\032\023.yolo_grpc.Response\"\000\022=\n\rConfigUpda"
+  "ter\022\023.yolo_grpc.Response\032\021.yolo_grpc.Con"
+  "fig\"\000(\0010\001\0225\n\tSetConfig\022\021.yolo_grpc.Confi"
+  "g\032\023.yolo_grpc.Response\"\000b\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_yolo_5fgrpc_2eproto_deps[1] = {
 };
-static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_yolo_5fgrpc_2eproto_sccs[4] = {
+static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_yolo_5fgrpc_2eproto_sccs[6] = {
   &scc_info_CamInfo_yolo_5fgrpc_2eproto.base,
+  &scc_info_Config_yolo_5fgrpc_2eproto.base,
   &scc_info_Detection_yolo_5fgrpc_2eproto.base,
+  &scc_info_DetectionLine_yolo_5fgrpc_2eproto.base,
+  &scc_info_Point_yolo_5fgrpc_2eproto.base,
   &scc_info_Response_yolo_5fgrpc_2eproto.base,
-  &scc_info_TrackPoint_yolo_5fgrpc_2eproto.base,
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_yolo_5fgrpc_2eproto_once;
 static bool descriptor_table_yolo_5fgrpc_2eproto_initialized = false;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_yolo_5fgrpc_2eproto = {
-  &descriptor_table_yolo_5fgrpc_2eproto_initialized, descriptor_table_protodef_yolo_5fgrpc_2eproto, "yolo_grpc.proto", 435,
-  &descriptor_table_yolo_5fgrpc_2eproto_once, descriptor_table_yolo_5fgrpc_2eproto_sccs, descriptor_table_yolo_5fgrpc_2eproto_deps, 4, 0,
+  &descriptor_table_yolo_5fgrpc_2eproto_initialized, descriptor_table_protodef_yolo_5fgrpc_2eproto, "yolo_grpc.proto", 712,
+  &descriptor_table_yolo_5fgrpc_2eproto_once, descriptor_table_yolo_5fgrpc_2eproto_sccs, descriptor_table_yolo_5fgrpc_2eproto_deps, 6, 0,
   schemas, file_default_instances, TableStruct_yolo_5fgrpc_2eproto::offsets,
-  file_level_metadata_yolo_5fgrpc_2eproto, 4, file_level_enum_descriptors_yolo_5fgrpc_2eproto, file_level_service_descriptors_yolo_5fgrpc_2eproto,
+  file_level_metadata_yolo_5fgrpc_2eproto, 6, file_level_enum_descriptors_yolo_5fgrpc_2eproto, file_level_service_descriptors_yolo_5fgrpc_2eproto,
 };
 
 // Force running AddDescriptors() at dynamic initialization time.
@@ -307,7 +374,7 @@ const char* CamInfo::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::in
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
-      // repeated .yolo_grpc.TrackPoint track = 5;
+      // repeated .yolo_grpc.Point track = 5;
       case 5:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 42)) {
           ptr -= 1;
@@ -375,7 +442,7 @@ failure:
         4, _Internal::detection(this), target, stream);
   }
 
-  // repeated .yolo_grpc.TrackPoint track = 5;
+  // repeated .yolo_grpc.Point track = 5;
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->_internal_track_size()); i < n; i++) {
     target = stream->EnsureSpace(target);
@@ -399,7 +466,7 @@ size_t CamInfo::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // repeated .yolo_grpc.TrackPoint track = 5;
+  // repeated .yolo_grpc.Point track = 5;
   total_size += 1UL * this->_internal_track_size();
   for (const auto& msg : this->track_) {
     total_size +=
@@ -534,22 +601,16 @@ Detection::Detection(const Detection& from)
   : ::PROTOBUF_NAMESPACE_ID::Message(),
       _internal_metadata_(nullptr) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
-  line_id_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  if (!from._internal_line_id().empty()) {
-    line_id_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.line_id_);
-  }
   ::memcpy(&x_left_, &from.x_left_,
-    static_cast<size_t>(reinterpret_cast<char*>(&width_) -
-    reinterpret_cast<char*>(&x_left_)) + sizeof(width_));
+    static_cast<size_t>(reinterpret_cast<char*>(&line_id_) -
+    reinterpret_cast<char*>(&x_left_)) + sizeof(line_id_));
   // @@protoc_insertion_point(copy_constructor:yolo_grpc.Detection)
 }
 
 void Detection::SharedCtor() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_Detection_yolo_5fgrpc_2eproto.base);
-  line_id_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   ::memset(&x_left_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&width_) -
-      reinterpret_cast<char*>(&x_left_)) + sizeof(width_));
+      reinterpret_cast<char*>(&line_id_) -
+      reinterpret_cast<char*>(&x_left_)) + sizeof(line_id_));
 }
 
 Detection::~Detection() {
@@ -558,7 +619,6 @@ Detection::~Detection() {
 }
 
 void Detection::SharedDtor() {
-  line_id_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
 void Detection::SetCachedSize(int size) const {
@@ -576,10 +636,9 @@ void Detection::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  line_id_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   ::memset(&x_left_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&width_) -
-      reinterpret_cast<char*>(&x_left_)) + sizeof(width_));
+      reinterpret_cast<char*>(&line_id_) -
+      reinterpret_cast<char*>(&x_left_)) + sizeof(line_id_));
   _internal_metadata_.Clear();
 }
 
@@ -618,12 +677,10 @@ const char* Detection::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
-      // string line_id = 5;
+      // int32 line_id = 5;
       case 5:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 42)) {
-          auto str = _internal_mutable_line_id();
-          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "yolo_grpc.Detection.line_id"));
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 40)) {
+          line_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint(&ptr);
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
@@ -677,14 +734,10 @@ failure:
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(4, this->_internal_width(), target);
   }
 
-  // string line_id = 5;
-  if (this->line_id().size() > 0) {
-    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-      this->_internal_line_id().data(), static_cast<int>(this->_internal_line_id().length()),
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "yolo_grpc.Detection.line_id");
-    target = stream->WriteStringMaybeAliased(
-        5, this->_internal_line_id(), target);
+  // int32 line_id = 5;
+  if (this->line_id() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(5, this->_internal_line_id(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -702,13 +755,6 @@ size_t Detection::ByteSizeLong() const {
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
-
-  // string line_id = 5;
-  if (this->line_id().size() > 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
-        this->_internal_line_id());
-  }
 
   // int32 x_left = 1;
   if (this->x_left() != 0) {
@@ -736,6 +782,13 @@ size_t Detection::ByteSizeLong() const {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
         this->_internal_width());
+  }
+
+  // int32 line_id = 5;
+  if (this->line_id() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
+        this->_internal_line_id());
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -769,10 +822,6 @@ void Detection::MergeFrom(const Detection& from) {
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from.line_id().size() > 0) {
-
-    line_id_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.line_id_);
-  }
   if (from.x_left() != 0) {
     _internal_set_x_left(from._internal_x_left());
   }
@@ -784,6 +833,9 @@ void Detection::MergeFrom(const Detection& from) {
   }
   if (from.width() != 0) {
     _internal_set_width(from._internal_width());
+  }
+  if (from.line_id() != 0) {
+    _internal_set_line_id(from._internal_line_id());
   }
 }
 
@@ -808,12 +860,11 @@ bool Detection::IsInitialized() const {
 void Detection::InternalSwap(Detection* other) {
   using std::swap;
   _internal_metadata_.Swap(&other->_internal_metadata_);
-  line_id_.Swap(&other->line_id_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
-    GetArenaNoVirtual());
   swap(x_left_, other->x_left_);
   swap(y_top_, other->y_top_);
   swap(height_, other->height_);
   swap(width_, other->width_);
+  swap(line_id_, other->line_id_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata Detection::GetMetadata() const {
@@ -823,52 +874,52 @@ void Detection::InternalSwap(Detection* other) {
 
 // ===================================================================
 
-void TrackPoint::InitAsDefaultInstance() {
+void Point::InitAsDefaultInstance() {
 }
-class TrackPoint::_Internal {
+class Point::_Internal {
  public:
 };
 
-TrackPoint::TrackPoint()
+Point::Point()
   : ::PROTOBUF_NAMESPACE_ID::Message(), _internal_metadata_(nullptr) {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:yolo_grpc.TrackPoint)
+  // @@protoc_insertion_point(constructor:yolo_grpc.Point)
 }
-TrackPoint::TrackPoint(const TrackPoint& from)
+Point::Point(const Point& from)
   : ::PROTOBUF_NAMESPACE_ID::Message(),
       _internal_metadata_(nullptr) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::memcpy(&x_, &from.x_,
     static_cast<size_t>(reinterpret_cast<char*>(&y_) -
     reinterpret_cast<char*>(&x_)) + sizeof(y_));
-  // @@protoc_insertion_point(copy_constructor:yolo_grpc.TrackPoint)
+  // @@protoc_insertion_point(copy_constructor:yolo_grpc.Point)
 }
 
-void TrackPoint::SharedCtor() {
+void Point::SharedCtor() {
   ::memset(&x_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&y_) -
       reinterpret_cast<char*>(&x_)) + sizeof(y_));
 }
 
-TrackPoint::~TrackPoint() {
-  // @@protoc_insertion_point(destructor:yolo_grpc.TrackPoint)
+Point::~Point() {
+  // @@protoc_insertion_point(destructor:yolo_grpc.Point)
   SharedDtor();
 }
 
-void TrackPoint::SharedDtor() {
+void Point::SharedDtor() {
 }
 
-void TrackPoint::SetCachedSize(int size) const {
+void Point::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
-const TrackPoint& TrackPoint::default_instance() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_TrackPoint_yolo_5fgrpc_2eproto.base);
+const Point& Point::default_instance() {
+  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_Point_yolo_5fgrpc_2eproto.base);
   return *internal_default_instance();
 }
 
 
-void TrackPoint::Clear() {
-// @@protoc_insertion_point(message_clear_start:yolo_grpc.TrackPoint)
+void Point::Clear() {
+// @@protoc_insertion_point(message_clear_start:yolo_grpc.Point)
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -879,7 +930,7 @@ void TrackPoint::Clear() {
   _internal_metadata_.Clear();
 }
 
-const char* TrackPoint::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+const char* Point::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
   while (!ctx->Done(&ptr)) {
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
@@ -920,9 +971,9 @@ failure:
 #undef CHK_
 }
 
-::PROTOBUF_NAMESPACE_ID::uint8* TrackPoint::_InternalSerialize(
+::PROTOBUF_NAMESPACE_ID::uint8* Point::_InternalSerialize(
     ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:yolo_grpc.TrackPoint)
+  // @@protoc_insertion_point(serialize_to_array_start:yolo_grpc.Point)
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -942,12 +993,12 @@ failure:
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields(), target, stream);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:yolo_grpc.TrackPoint)
+  // @@protoc_insertion_point(serialize_to_array_end:yolo_grpc.Point)
   return target;
 }
 
-size_t TrackPoint::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:yolo_grpc.TrackPoint)
+size_t Point::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:yolo_grpc.Point)
   size_t total_size = 0;
 
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
@@ -977,23 +1028,23 @@ size_t TrackPoint::ByteSizeLong() const {
   return total_size;
 }
 
-void TrackPoint::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:yolo_grpc.TrackPoint)
+void Point::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:yolo_grpc.Point)
   GOOGLE_DCHECK_NE(&from, this);
-  const TrackPoint* source =
-      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<TrackPoint>(
+  const Point* source =
+      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<Point>(
           &from);
   if (source == nullptr) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:yolo_grpc.TrackPoint)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:yolo_grpc.Point)
     ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:yolo_grpc.TrackPoint)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:yolo_grpc.Point)
     MergeFrom(*source);
   }
 }
 
-void TrackPoint::MergeFrom(const TrackPoint& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:yolo_grpc.TrackPoint)
+void Point::MergeFrom(const Point& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:yolo_grpc.Point)
   GOOGLE_DCHECK_NE(&from, this);
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
@@ -1007,32 +1058,32 @@ void TrackPoint::MergeFrom(const TrackPoint& from) {
   }
 }
 
-void TrackPoint::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:yolo_grpc.TrackPoint)
+void Point::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:yolo_grpc.Point)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void TrackPoint::CopyFrom(const TrackPoint& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:yolo_grpc.TrackPoint)
+void Point::CopyFrom(const Point& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:yolo_grpc.Point)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool TrackPoint::IsInitialized() const {
+bool Point::IsInitialized() const {
   return true;
 }
 
-void TrackPoint::InternalSwap(TrackPoint* other) {
+void Point::InternalSwap(Point* other) {
   using std::swap;
   _internal_metadata_.Swap(&other->_internal_metadata_);
   swap(x_, other->x_);
   swap(y_, other->y_);
 }
 
-::PROTOBUF_NAMESPACE_ID::Metadata TrackPoint::GetMetadata() const {
+::PROTOBUF_NAMESPACE_ID::Metadata Point::GetMetadata() const {
   return GetMetadataStatic();
 }
 
@@ -1314,6 +1365,511 @@ void Response::InternalSwap(Response* other) {
 }
 
 
+// ===================================================================
+
+void Config::InitAsDefaultInstance() {
+}
+class Config::_Internal {
+ public:
+};
+
+Config::Config()
+  : ::PROTOBUF_NAMESPACE_ID::Message(), _internal_metadata_(nullptr) {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:yolo_grpc.Config)
+}
+Config::Config(const Config& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message(),
+      _internal_metadata_(nullptr),
+      detection_lines_(from.detection_lines_) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  uid_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  if (!from._internal_uid().empty()) {
+    uid_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.uid_);
+  }
+  // @@protoc_insertion_point(copy_constructor:yolo_grpc.Config)
+}
+
+void Config::SharedCtor() {
+  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_Config_yolo_5fgrpc_2eproto.base);
+  uid_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+
+Config::~Config() {
+  // @@protoc_insertion_point(destructor:yolo_grpc.Config)
+  SharedDtor();
+}
+
+void Config::SharedDtor() {
+  uid_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+
+void Config::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const Config& Config::default_instance() {
+  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_Config_yolo_5fgrpc_2eproto.base);
+  return *internal_default_instance();
+}
+
+
+void Config::Clear() {
+// @@protoc_insertion_point(message_clear_start:yolo_grpc.Config)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  detection_lines_.Clear();
+  uid_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  _internal_metadata_.Clear();
+}
+
+const char* Config::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    CHK_(ptr);
+    switch (tag >> 3) {
+      // string uid = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
+          auto str = _internal_mutable_uid();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "yolo_grpc.Config.uid"));
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // repeated .yolo_grpc.DetectionLine detection_lines = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 18)) {
+          ptr -= 1;
+          do {
+            ptr += 1;
+            ptr = ctx->ParseMessage(_internal_add_detection_lines(), ptr);
+            CHK_(ptr);
+            if (!ctx->DataAvailable(ptr)) break;
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<18>(ptr));
+        } else goto handle_unusual;
+        continue;
+      default: {
+      handle_unusual:
+        if ((tag & 7) == 4 || tag == 0) {
+          ctx->SetLastTag(tag);
+          goto success;
+        }
+        ptr = UnknownFieldParse(tag, &_internal_metadata_, ptr, ctx);
+        CHK_(ptr != nullptr);
+        continue;
+      }
+    }  // switch
+  }  // while
+success:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto success;
+#undef CHK_
+}
+
+::PROTOBUF_NAMESPACE_ID::uint8* Config::_InternalSerialize(
+    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:yolo_grpc.Config)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // string uid = 1;
+  if (this->uid().size() > 0) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_uid().data(), static_cast<int>(this->_internal_uid().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "yolo_grpc.Config.uid");
+    target = stream->WriteStringMaybeAliased(
+        1, this->_internal_uid(), target);
+  }
+
+  // repeated .yolo_grpc.DetectionLine detection_lines = 2;
+  for (unsigned int i = 0,
+      n = static_cast<unsigned int>(this->_internal_detection_lines_size()); i < n; i++) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(2, this->_internal_detection_lines(i), target, stream);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields(), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:yolo_grpc.Config)
+  return target;
+}
+
+size_t Config::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:yolo_grpc.Config)
+  size_t total_size = 0;
+
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // repeated .yolo_grpc.DetectionLine detection_lines = 2;
+  total_size += 1UL * this->_internal_detection_lines_size();
+  for (const auto& msg : this->detection_lines_) {
+    total_size +=
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
+  }
+
+  // string uid = 1;
+  if (this->uid().size() > 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+        this->_internal_uid());
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
+        _internal_metadata_, total_size, &_cached_size_);
+  }
+  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void Config::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:yolo_grpc.Config)
+  GOOGLE_DCHECK_NE(&from, this);
+  const Config* source =
+      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<Config>(
+          &from);
+  if (source == nullptr) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:yolo_grpc.Config)
+    ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:yolo_grpc.Config)
+    MergeFrom(*source);
+  }
+}
+
+void Config::MergeFrom(const Config& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:yolo_grpc.Config)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  detection_lines_.MergeFrom(from.detection_lines_);
+  if (from.uid().size() > 0) {
+
+    uid_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.uid_);
+  }
+}
+
+void Config::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:yolo_grpc.Config)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void Config::CopyFrom(const Config& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:yolo_grpc.Config)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Config::IsInitialized() const {
+  return true;
+}
+
+void Config::InternalSwap(Config* other) {
+  using std::swap;
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  detection_lines_.InternalSwap(&other->detection_lines_);
+  uid_.Swap(&other->uid_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata Config::GetMetadata() const {
+  return GetMetadataStatic();
+}
+
+
+// ===================================================================
+
+void DetectionLine::InitAsDefaultInstance() {
+  ::yolo_grpc::_DetectionLine_default_instance_._instance.get_mutable()->begin_ = const_cast< ::yolo_grpc::Point*>(
+      ::yolo_grpc::Point::internal_default_instance());
+  ::yolo_grpc::_DetectionLine_default_instance_._instance.get_mutable()->end_ = const_cast< ::yolo_grpc::Point*>(
+      ::yolo_grpc::Point::internal_default_instance());
+}
+class DetectionLine::_Internal {
+ public:
+  static const ::yolo_grpc::Point& begin(const DetectionLine* msg);
+  static const ::yolo_grpc::Point& end(const DetectionLine* msg);
+};
+
+const ::yolo_grpc::Point&
+DetectionLine::_Internal::begin(const DetectionLine* msg) {
+  return *msg->begin_;
+}
+const ::yolo_grpc::Point&
+DetectionLine::_Internal::end(const DetectionLine* msg) {
+  return *msg->end_;
+}
+DetectionLine::DetectionLine()
+  : ::PROTOBUF_NAMESPACE_ID::Message(), _internal_metadata_(nullptr) {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:yolo_grpc.DetectionLine)
+}
+DetectionLine::DetectionLine(const DetectionLine& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message(),
+      _internal_metadata_(nullptr) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  if (from._internal_has_begin()) {
+    begin_ = new ::yolo_grpc::Point(*from.begin_);
+  } else {
+    begin_ = nullptr;
+  }
+  if (from._internal_has_end()) {
+    end_ = new ::yolo_grpc::Point(*from.end_);
+  } else {
+    end_ = nullptr;
+  }
+  id_ = from.id_;
+  // @@protoc_insertion_point(copy_constructor:yolo_grpc.DetectionLine)
+}
+
+void DetectionLine::SharedCtor() {
+  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_DetectionLine_yolo_5fgrpc_2eproto.base);
+  ::memset(&begin_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&id_) -
+      reinterpret_cast<char*>(&begin_)) + sizeof(id_));
+}
+
+DetectionLine::~DetectionLine() {
+  // @@protoc_insertion_point(destructor:yolo_grpc.DetectionLine)
+  SharedDtor();
+}
+
+void DetectionLine::SharedDtor() {
+  if (this != internal_default_instance()) delete begin_;
+  if (this != internal_default_instance()) delete end_;
+}
+
+void DetectionLine::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const DetectionLine& DetectionLine::default_instance() {
+  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_DetectionLine_yolo_5fgrpc_2eproto.base);
+  return *internal_default_instance();
+}
+
+
+void DetectionLine::Clear() {
+// @@protoc_insertion_point(message_clear_start:yolo_grpc.DetectionLine)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  if (GetArenaNoVirtual() == nullptr && begin_ != nullptr) {
+    delete begin_;
+  }
+  begin_ = nullptr;
+  if (GetArenaNoVirtual() == nullptr && end_ != nullptr) {
+    delete end_;
+  }
+  end_ = nullptr;
+  id_ = 0;
+  _internal_metadata_.Clear();
+}
+
+const char* DetectionLine::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    CHK_(ptr);
+    switch (tag >> 3) {
+      // int32 id = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 8)) {
+          id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint(&ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // .yolo_grpc.Point begin = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 18)) {
+          ptr = ctx->ParseMessage(_internal_mutable_begin(), ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // .yolo_grpc.Point end = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 26)) {
+          ptr = ctx->ParseMessage(_internal_mutable_end(), ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      default: {
+      handle_unusual:
+        if ((tag & 7) == 4 || tag == 0) {
+          ctx->SetLastTag(tag);
+          goto success;
+        }
+        ptr = UnknownFieldParse(tag, &_internal_metadata_, ptr, ctx);
+        CHK_(ptr != nullptr);
+        continue;
+      }
+    }  // switch
+  }  // while
+success:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto success;
+#undef CHK_
+}
+
+::PROTOBUF_NAMESPACE_ID::uint8* DetectionLine::_InternalSerialize(
+    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:yolo_grpc.DetectionLine)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // int32 id = 1;
+  if (this->id() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(1, this->_internal_id(), target);
+  }
+
+  // .yolo_grpc.Point begin = 2;
+  if (this->has_begin()) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(
+        2, _Internal::begin(this), target, stream);
+  }
+
+  // .yolo_grpc.Point end = 3;
+  if (this->has_end()) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(
+        3, _Internal::end(this), target, stream);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields(), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:yolo_grpc.DetectionLine)
+  return target;
+}
+
+size_t DetectionLine::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:yolo_grpc.DetectionLine)
+  size_t total_size = 0;
+
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // .yolo_grpc.Point begin = 2;
+  if (this->has_begin()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+        *begin_);
+  }
+
+  // .yolo_grpc.Point end = 3;
+  if (this->has_end()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+        *end_);
+  }
+
+  // int32 id = 1;
+  if (this->id() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
+        this->_internal_id());
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
+        _internal_metadata_, total_size, &_cached_size_);
+  }
+  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void DetectionLine::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:yolo_grpc.DetectionLine)
+  GOOGLE_DCHECK_NE(&from, this);
+  const DetectionLine* source =
+      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<DetectionLine>(
+          &from);
+  if (source == nullptr) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:yolo_grpc.DetectionLine)
+    ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:yolo_grpc.DetectionLine)
+    MergeFrom(*source);
+  }
+}
+
+void DetectionLine::MergeFrom(const DetectionLine& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:yolo_grpc.DetectionLine)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from.has_begin()) {
+    _internal_mutable_begin()->::yolo_grpc::Point::MergeFrom(from._internal_begin());
+  }
+  if (from.has_end()) {
+    _internal_mutable_end()->::yolo_grpc::Point::MergeFrom(from._internal_end());
+  }
+  if (from.id() != 0) {
+    _internal_set_id(from._internal_id());
+  }
+}
+
+void DetectionLine::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:yolo_grpc.DetectionLine)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void DetectionLine::CopyFrom(const DetectionLine& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:yolo_grpc.DetectionLine)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool DetectionLine::IsInitialized() const {
+  return true;
+}
+
+void DetectionLine::InternalSwap(DetectionLine* other) {
+  using std::swap;
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  swap(begin_, other->begin_);
+  swap(end_, other->end_);
+  swap(id_, other->id_);
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata DetectionLine::GetMetadata() const {
+  return GetMetadataStatic();
+}
+
+
 // @@protoc_insertion_point(namespace_scope)
 }  // namespace yolo_grpc
 PROTOBUF_NAMESPACE_OPEN
@@ -1323,11 +1879,17 @@ template<> PROTOBUF_NOINLINE ::yolo_grpc::CamInfo* Arena::CreateMaybeMessage< ::
 template<> PROTOBUF_NOINLINE ::yolo_grpc::Detection* Arena::CreateMaybeMessage< ::yolo_grpc::Detection >(Arena* arena) {
   return Arena::CreateInternal< ::yolo_grpc::Detection >(arena);
 }
-template<> PROTOBUF_NOINLINE ::yolo_grpc::TrackPoint* Arena::CreateMaybeMessage< ::yolo_grpc::TrackPoint >(Arena* arena) {
-  return Arena::CreateInternal< ::yolo_grpc::TrackPoint >(arena);
+template<> PROTOBUF_NOINLINE ::yolo_grpc::Point* Arena::CreateMaybeMessage< ::yolo_grpc::Point >(Arena* arena) {
+  return Arena::CreateInternal< ::yolo_grpc::Point >(arena);
 }
 template<> PROTOBUF_NOINLINE ::yolo_grpc::Response* Arena::CreateMaybeMessage< ::yolo_grpc::Response >(Arena* arena) {
   return Arena::CreateInternal< ::yolo_grpc::Response >(arena);
+}
+template<> PROTOBUF_NOINLINE ::yolo_grpc::Config* Arena::CreateMaybeMessage< ::yolo_grpc::Config >(Arena* arena) {
+  return Arena::CreateInternal< ::yolo_grpc::Config >(arena);
+}
+template<> PROTOBUF_NOINLINE ::yolo_grpc::DetectionLine* Arena::CreateMaybeMessage< ::yolo_grpc::DetectionLine >(Arena* arena) {
+  return Arena::CreateInternal< ::yolo_grpc::DetectionLine >(arena);
 }
 PROTOBUF_NAMESPACE_CLOSE
 
