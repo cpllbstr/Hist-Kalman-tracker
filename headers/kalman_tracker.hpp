@@ -8,7 +8,7 @@
 
 struct EnvVarException : public exception {
     const char* what() const throw() {
-        return "DETECTOR_ADDR_PORT enviroment variable is not set! Run this command in shell: export DETECTOR_ADDR_PORT=\"127.0.0.1:8000\"";
+        return "DETECTOR_ADDR_PORT enviroment variable is not set! Run this command in shell: export DETECTOR_ADDR_PORT=\"127.0.0.1:50051\"";
     }
 };
 
@@ -42,7 +42,7 @@ public:
             throw EnvVarException();
         }
         this->sender = unique_ptr<STYoloClient>(new STYoloClient(grpc::CreateChannel(ip_addr, grpc::InsecureChannelCredentials())));
-        // sender->ConfigUpdater();
+        sender->ConfigUpdater();
     }
 
     void RemoveOldTracks() {
@@ -97,7 +97,6 @@ void KalmanTracker::DrawCV(Mat &img, bool with_det_lines=true) {
         }
     }
 }
-
 
 Mat KalmanTracker::calcHistRGB(Mat img) {
     MatND hist;
@@ -180,18 +179,11 @@ void KalmanTracker::Update(list<Detection> dets, Mat &img, float dt) {
             auto ln = Line(tr.Points.front(),tr.Points.back());
             for (auto &lin: this->DetLines) {
                 if (ln.CrossedInDirection(lin)) {
-                    // cout << "DetL: ";
-                    // lin.Print();
-                    // cout << "Trak: ";
-                    // ln.Print();
-                    // ln.DrawCV(img);
-                    thread t = thread([this](int id, Track tr, Mat img){
+                    thread t = thread([this](int id, Track tr, Mat img) {
                         sender->SendDetection("0", id,tr, img);
-                    }, lin.id, tr, img
-                    );
+                    }, lin.id, tr, img);
                     t.detach();
                     cout << "Crossed!" << endl;
-                    // @TODO: here should be sending through gRPC
                 }
             }
         }

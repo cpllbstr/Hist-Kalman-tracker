@@ -330,7 +330,7 @@ void process_video(string vid, string modelConfiguration , string modelWeights) 
         net.forward(outs, getOutputsNames(net));
         
         auto duration = std::chrono::duration_cast<chrono::milliseconds>(std::chrono::steady_clock::now() - start);
-        cout << "Time on forwarding: " << duration.count() << endl;
+        // cout << "Time on forwarding: " << duration.count() << endl;
         // Remove the bounding boxes with low confidence
         auto dets = postprocess(frame, outs);
         // Put efficiency information. The function getPerfProfile returns the overall time for inference(t) and the timings for each of the layers(in layersTimes)
@@ -340,9 +340,9 @@ void process_video(string vid, string modelConfiguration , string modelWeights) 
         auto now = getTickCount();
         double dtime =  (now - time)/getTickFrequency();
         time = now;
-        cout <<"TIME: "<<dtime<<endl;
+        // cout <<"TIME: "<<dtime<<endl;
         auto dduration = std::chrono::duration_cast<chrono::milliseconds>(std::chrono::steady_clock::now() - start);
-        cout << format("dduration: %d ms\n", dduration.count());
+        // cout << format("dduration: %d ms\n", dduration.count());
         ktr.Update(dets, frame,  1.0/* dtime */);
         string label = format("Inference time for a frame : %.2f ms|| overall duration %d", t, dduration.count());
         putText(frame, label, Point(0, 15), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0, 0, 255));

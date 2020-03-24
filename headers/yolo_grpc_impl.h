@@ -14,6 +14,14 @@ using grpc::Status;
 
 using yolo_grpc::STYolo;
 
+
+struct ServerNotRespondingException : public exception {
+    const char* what() const throw() {
+        return "Server is not responding. Check your enviroment variable DETECTOR_ADDR_PORT or if server is running";
+    }
+};
+
+
 class STYoloClient {
 public:
     explicit STYoloClient(std::shared_ptr<Channel> channel) : stub_(STYolo::NewStub(channel)) {}
@@ -23,12 +31,12 @@ public:
     std::string SendDetection(const string cam_id, int line_id, Track &tr, cv::Mat &im) {
         auto request = new yolo_grpc::CamInfo();
         vector<uchar> buf;
-        cv::imencode(".png", im ,buf);
+        cv::imencode(".png", im,buf);
         string strdata(buf.begin(), buf.end());
         request->set_cam_id(cam_id);
         request->set_image(move(strdata));
         request->set_timestamp(time(0));
-        
+
         for (auto &pnt:tr.Points) {
             auto pnt_tosend = request->add_track();
             pnt_tosend->set_x(pnt.x);
@@ -46,7 +54,7 @@ public:
 
         request->set_allocated_detection(&det);
 
-        
+
         yolo_grpc::Response reply;
         ClientContext context;
         Status status = stub_->SendDetection(&context, *request, &reply);
@@ -64,26 +72,33 @@ public:
     void ConfigUpdater() {
         using namespace yolo_grpc;
         using namespace grpc;
+        cout << "Subscrubing to configuration updates\n";
+        
         ClientContext context;
+        // context.set_deadline(grpc::TimePoint<int>(1000));
         auto stream  = stub_->ConfigUpdater(&context);
         // shared_ptr<ClientReaderWriter<Response, Config>> stream(move(stub_->ConfigUpdater(&context).release()));
-        Response resp;
-        unique_ptr<string> init(new string("Subscribe Response"));
-        unique_ptr<string> msg(new string("New conf loaded"));
+        auto resp = new Response();
+        resp->set_allocated_message(new string("Subscribe Response"));
+        resp->Clear();
+        Config newconf;
+        if (stream->Write(*resp)) {
+            stream->Read(&newconf);
+            cout << "Got UID:" << newconf.uid() << endl;
+        } else {
+            cout << "Cannot locate server" << endl;
+            throw ServerNotRespondingException();
+        }
 
-        resp.set_allocated_message(init.get());
-        resp.Clear();
-        stream->Write(resp);
         for(;;) {
             Config newconf;
             if (!stream->Read(&newconf)) {
                 continue;
             } else {
-                cout << "Got UID:" << newconf.uid() << endl;
-                Response resp;
-                
-                resp.set_allocated_message(msg.get());
-                if (!stream->Write(resp)) {
+                auto resp = new Response();
+                // resp->set_allocated_message(new string("Response!"))
+                resp->set_allocated_message(new string("New conf loaded"));
+                if (!stream->Write(*resp)) {
                     cout << "Error stream is not responding!" << endl;
                 }
             }
