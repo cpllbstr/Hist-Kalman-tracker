@@ -8,13 +8,13 @@
 
 struct EnvVarException : public exception {
     const char* what() const throw() {
-        return "DETECTOR_ADDR_PORT enviroment variable is not set! Run command in shell: export DETECTOR_ADDR_PORT=\"127.0.0.1:8000\"";
+        return "DETECTOR_ADDR_PORT enviroment variable is not set! Run this command in shell: export DETECTOR_ADDR_PORT=\"127.0.0.1:8000\"";
     }
 };
 
 class KalmanTracker {
 private:
-    unique_ptr<STYoloClient> s;
+    unique_ptr<STYoloClient> sender;
     Mat calcHistRGB(Mat);
     void Register(list<Detection>, Mat&);
     list<Line> DetLines;
@@ -41,8 +41,8 @@ public:
         if (ip_addr == NULL) {
             throw EnvVarException();
         }
-        this->s = unique_ptr<STYoloClient>(new STYoloClient(grpc::CreateChannel(ip_addr, grpc::InsecureChannelCredentials())));
-        s->ConfigUpdater();
+        this->sender = unique_ptr<STYoloClient>(new STYoloClient(grpc::CreateChannel(ip_addr, grpc::InsecureChannelCredentials())));
+        // sender->ConfigUpdater();
     }
 
     void RemoveOldTracks() {
@@ -185,9 +185,9 @@ void KalmanTracker::Update(list<Detection> dets, Mat &img, float dt) {
                     // cout << "Trak: ";
                     // ln.Print();
                     // ln.DrawCV(img);
-                    thread t = thread([&](){
-                        s->SendDetection("0", lin.id,tr, img);
-                    }
+                    thread t = thread([this](int id, Track tr, Mat img){
+                        sender->SendDetection("0", id,tr, img);
+                    }, lin.id, tr, img
                     );
                     t.detach();
                     cout << "Crossed!" << endl;

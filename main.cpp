@@ -268,15 +268,15 @@ vector<String> getOutputsNames(const Net& net)
     return names;
 }
 
-void process_video(string vid) {
+void process_video(string vid, string modelConfiguration , string modelWeights) {
 // Load names of classes
     string classesFile = "coco.names";
     ifstream ifs(classesFile.c_str());
     string line;
     while (getline(ifs, line)) classes.push_back(line);
 
-    String modelConfiguration = "yolov3.cfg";
-    String modelWeights = "yolov3.weights";
+    // String modelConfiguration = "yolov3.cfg";
+    // String modelWeights = "yolov3.weights";
 
 
     // Load the network
@@ -395,5 +395,5 @@ int main(int argc, char** argv)
     // Line l1(0,0,5,5);
     // Line l2(0,5,5,0);
     // cout << boolalpha << l1.CrossedInDirection(l2) << endl;
-    process_video(vid_path);
+    process_video(vid_path, yolo_cfg, yolo_weights);
 }

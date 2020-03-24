@@ -1,6 +1,6 @@
 [net]
-cfg="./yolov3.cfg" # path to yolo config
-weights="./yolov3.weights" # path to yolo weights
+cfg="./tinyv3.cfg" # path to yolo config
+weights="./yolov3-tiny.weights" # path to yolo weights
 confThreshold = 0.5 # confidence treshold
 nmsThreshold = 0.4 # non max supression treshold
 inpWidth = 416 

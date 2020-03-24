@@ -79,7 +79,7 @@ public:
             if (!stream->Read(&newconf)) {
                 continue;
             } else {
-                cout << newconf.uid() << endl;
+                cout << "Got UID:" << newconf.uid() << endl;
                 Response resp;
                 
                 resp.set_allocated_message(msg.get());
