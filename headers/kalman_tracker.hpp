@@ -18,6 +18,7 @@ private:
     Mat calcHistRGB(Mat);
     void Register(list<Detection>, Mat&);
     list<Line> DetLines;
+    void LoadConfig(string path_to_config);
 public:
     int
     maxNoMatch,
@@ -27,9 +28,7 @@ public:
     tresholdDist,
     histTreshold;
     list<Track> Tracks;
-
     void DrawCV(Mat&, bool);
-    void UpdateConfig(string path_to_config);
     void Update(list<Detection>, Mat&, float);
     KalmanTracker(int nomatch = 25,int maxpoints = 25,float dist = 100, float hist_tr =0.6):
         maxNoMatch(nomatch),
@@ -41,8 +40,12 @@ public:
         if (ip_addr == NULL) {
             throw EnvVarException();
         }
+        this->LoadConfig("./config.toml");
         this->sender = unique_ptr<STYoloClient>(new STYoloClient(grpc::CreateChannel(ip_addr, grpc::InsecureChannelCredentials())));
-        sender->ConfigUpdater();
+        thread updater = thread([this](list<Line>* l) {
+            sender->ConfigUpdater(l);
+        }, &DetLines);
+        updater.detach();
     }
 
     void RemoveOldTracks() {
@@ -60,7 +63,7 @@ public:
 };
 
 // @TODO: should be made with grpc updating
-void KalmanTracker::UpdateConfig (string path_to_config) {
+void KalmanTracker::LoadConfig (string path_to_config) {
     toml::value config;
     int distT,pointsC, nomatch;
     float histT;
@@ -178,7 +181,11 @@ void KalmanTracker::Update(list<Detection> dets, Mat &img, float dt) {
         if (tr.updated) {
             auto ln = Line(tr.Points.front(),tr.Points.back());
             for (auto &lin: this->DetLines) {
+                if (tr.sent) {
+                    continue;
+                } 
                 if (ln.CrossedInDirection(lin)) {
+                    tr.sent=true;
                     thread t = thread([this](int id, Track tr, Mat img) {
                         sender->SendDetection("0", id,tr, img);
                     }, lin.id, tr, img);

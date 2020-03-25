@@ -14,6 +14,7 @@ using grpc::Status;
 
 using yolo_grpc::STYolo;
 
+mutex line_mutex;
 
 struct ServerNotRespondingException : public exception {
     const char* what() const throw() {
@@ -69,7 +70,7 @@ public:
         }
     }
 
-    void ConfigUpdater() {
+    void ConfigUpdater(list<Line>* Lines) {
         using namespace yolo_grpc;
         using namespace grpc;
         cout << "Subscrubing to configuration updates\n";
@@ -96,6 +97,12 @@ public:
                 continue;
             } else {
                 auto resp = new Response();
+                lock_guard<mutex> lock(line_mutex);
+                Lines->clear();
+                auto lines = newconf.detection_lines();
+                for (auto &&l: lines) {
+                    Lines->push_back(Line(l.begin().x(), l.begin().y(), l.end().x(), l.end().y()));
+                }
                 // resp->set_allocated_message(new string("Response!"))
                 resp->set_allocated_message(new string("New conf loaded"));
                 if (!stream->Write(*resp)) {

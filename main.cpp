@@ -303,7 +303,7 @@ void process_video(string vid, string modelConfiguration , string modelWeights) 
     KalmanTracker ktr;
     // Process frames.
     
-    ktr.UpdateConfig("./config.toml");
+    // ktr.LoadConfig("./config.toml");
     cout << ktr.histTreshold << ktr.maxNoMatch << ktr.maxPointsCount << ktr.tresholdDist << endl;
     
     auto start_s = std::chrono::steady_clock::now();

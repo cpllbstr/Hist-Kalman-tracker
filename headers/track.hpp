@@ -40,7 +40,7 @@ public:
     KalmanFilter kf;
     void DrawCV(Mat&);
     int nomatch, maxnomatch, maxlen, id;
-    bool updated=false, todelete;
+    bool updated=false, todelete, sent=false; 
     list<Point2d> Points;
     Detection prev_det;
     Mat prev_hist;
