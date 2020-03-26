@@ -3,7 +3,15 @@ project( DisplayImage )
 set(CMAKE_CXX_STANDARD 11)
 find_package(OpenCV REQUIRED )
 
+
+
+
 include(FetchContent)
+
+# set(toml11_BUILD_TEST OFF CACHE CACHE INTERNAL "")
+option(toml11_BUILD_TEST "" OFF)
+option(FETCHCONTENT_QUIET ""  OFF)
+
 FetchContent_Declare(
     gRPC
     GIT_REPOSITORY https://github.com/grpc/grpc
@@ -26,6 +34,7 @@ if(NOT TOML_POPULATED)
     FetchContent_Populate(TOML)
     add_subdirectory(${toml_SOURCE_DIR} ${toml_BINARY_DIR})
 endif()
+
 
 aux_source_directory(${CMAKE_SOURCE_DIR} SRCS)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR})

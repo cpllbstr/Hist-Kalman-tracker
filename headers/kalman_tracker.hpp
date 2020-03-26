@@ -51,10 +51,6 @@ public:
     void RemoveOldTracks() {
         Tracks.remove_if([=](Track tr) {
             if (tr.nomatch>=this->maxNoMatch) {
-                // cout << "removing track with id " << tr.id <<endl;
-                // for (auto p: tr.Points)
-                // cout<<p<<"-";
-                // cout<<"\n";
                 return true;
             }
             return false;
@@ -62,7 +58,6 @@ public:
     };
 };
 
-// @TODO: should be made with grpc updating
 void KalmanTracker::LoadConfig (string path_to_config) {
     toml::value config;
     int distT,pointsC, nomatch;
@@ -146,13 +141,7 @@ void KalmanTracker::Update(list<Detection> dets, Mat &img, float dt) {
     if (this->Tracks.size()==0) {
         this->Register(move(dets), img);
         return;
-    }
-    // auto histMap = make_unique<unordered_map<Detection, Mat>>();
-    unique_ptr<unordered_map<Detection, Mat>> histMap(new unordered_map<Detection, Mat>);
-    for (auto& tr : this->Tracks) {
-        auto track_p = tr.Points.front();
-        auto best_hist_score = histTreshold;
-        auto best_det = dets.end();
+    } 
         for (auto d = dets.begin(); d!=dets.end(); d++) {
             if (tr.prev_det.classId != d->classId) continue;
             if (d->appended) {
@@ -190,7 +179,7 @@ void KalmanTracker::Update(list<Detection> dets, Mat &img, float dt) {
                         sender->SendDetection("0", id,tr, img);
                     }, lin.id, tr, img);
                     t.detach();
-                    cout << "Crossed!" << endl;
+                    // cout << "Crossed!" << endl;
                 }
             }
         }
