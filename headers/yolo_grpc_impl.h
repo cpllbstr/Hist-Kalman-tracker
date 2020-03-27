@@ -70,7 +70,7 @@ public:
         }
     }
 
-    void ConfigUpdater(list<Line>* Lines) {
+    void ConfigUpdater(string* uid, list<Line>* Lines) {
         using namespace yolo_grpc;
         using namespace grpc;
         cout << "Subscrubing to configuration updates\n";
@@ -86,6 +86,7 @@ public:
         if (stream->Write(*resp)) {
             stream->Read(&newconf);
             cout << "Got UID:" << newconf.uid() << endl;
+            uid = new string(move(newconf.uid()));
         } else {
             cout << "Cannot locate server" << endl;
             throw ServerNotRespondingException();

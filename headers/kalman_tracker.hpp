@@ -27,6 +27,7 @@ public:
     // @TODO: Treshold distance from state params
     tresholdDist,
     histTreshold;
+    string uid;
     list<Track> Tracks;
     void DrawCV(Mat&, bool);
     void Update(list<Detection>, Mat&, float);
@@ -43,7 +44,7 @@ public:
         this->LoadConfig("./config.toml");
         this->sender = unique_ptr<STYoloClient>(new STYoloClient(grpc::CreateChannel(ip_addr, grpc::InsecureChannelCredentials())));
         thread updater = thread([this](list<Line>* l) {
-            sender->ConfigUpdater(l);
+            sender->ConfigUpdater(&(this->uid), l);
         }, &DetLines);
         updater.detach();
     }
@@ -141,7 +142,12 @@ void KalmanTracker::Update(list<Detection> dets, Mat &img, float dt) {
     if (this->Tracks.size()==0) {
         this->Register(move(dets), img);
         return;
-    } 
+    }
+    unique_ptr<unordered_map<Detection, Mat>> histMap(new unordered_map<Detection, Mat>);
+    for (auto& tr : this->Tracks) {
+        auto track_p = tr.Points.front();
+        auto best_hist_score = histTreshold;
+        auto best_det = dets.end();
         for (auto d = dets.begin(); d!=dets.end(); d++) {
             if (tr.prev_det.classId != d->classId) continue;
             if (d->appended) {
@@ -176,7 +182,7 @@ void KalmanTracker::Update(list<Detection> dets, Mat &img, float dt) {
                 if (ln.CrossedInDirection(lin)) {
                     tr.sent=true;
                     thread t = thread([this](int id, Track tr, Mat img) {
-                        sender->SendDetection("0", id,tr, img);
+                        sender->SendDetection(uid, id,tr, img);
                     }, lin.id, tr, img);
                     t.detach();
                     // cout << "Crossed!" << endl;

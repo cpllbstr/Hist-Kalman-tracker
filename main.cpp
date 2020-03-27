@@ -119,23 +119,16 @@ list<Detection> postprocess(Mat& frame, const vector<Mat>& outs) {
 }
 
 
-int process_camera(int argc, char** argv) {
-    CommandLineParser parser(argc, argv, keys);
-    parser.about("Use this script to run object detection using YOLO3 in OpenCV.");
-    if (parser.has("help"))
-    {
-        parser.printMessage();
-        return 0;
-    }
-    // Load names of classes
+void process_camera(int cam_id, string modelConfiguration , string modelWeights) {
+// Load names of classes
     string classesFile = "coco.names";
     ifstream ifs(classesFile.c_str());
     string line;
     while (getline(ifs, line)) classes.push_back(line);
-    
-    // Give the configuration and weight files for the model
-    String modelConfiguration = "yolov3.cfg";
-    String modelWeights = "yolov3.weights";
+
+    // String modelConfiguration = "yolov3.cfg";
+    // String modelWeights = "yolov3.weights";
+
 
     // Load the network
     Net net = readNetFromDarknet(modelConfiguration, modelWeights);
@@ -143,55 +136,23 @@ int process_camera(int argc, char** argv) {
     net.setPreferableTarget(DNN_TARGET_CUDA);
     
     // Open a video file or an image file or a camera stream.
-    string str, outputFile;
+    string  outputFile;
     VideoCapture cap;
     VideoWriter video;
     Mat frame, blob;
-    
-    try {
-        outputFile = "yolo_out_cpp.avi";
-        if (parser.has("image"))
-        {
-            // Open the image file
-            str = parser.get<String>("image");
-            ifstream ifile(str);
-            if (!ifile) throw("error");
-            cap.open(str);
-            str.replace(str.end()-4, str.end(), "_yolo_out_cpp.jpg");
-            outputFile = str;
-        }
-        else if (parser.has("video"))
-        {
-            // Open the video file
-            str = parser.get<String>("video");
-            ifstream ifile(str);
-            if (!ifile) throw("error");
-            cap.open(str);
-            str.replace(str.end()-4, str.end(), "_yolo_out_cpp.avi");
-            outputFile = str;
-        }
-        // Open the webcaom
-        else {
-            cout<<"DEVICE:"<<parser.get<int>("device")<<endl;
-            cap.open(parser.get<int>("device"));
-        }
-        
-    }
-    catch(...) {
-        cout << "Could not open the input image/video stream" << endl;
-        return 0;
-    }
-    
-    // Get the video writer initialized to save the output video
-    if (!parser.has("image")) {
-        video.open(outputFile, VideoWriter::fourcc('M','J','P','G'), 28, Size(cap.get(CAP_PROP_FRAME_WIDTH), cap.get(CAP_PROP_FRAME_HEIGHT)));
-    }
-    
-    // Create a window
-    // static const string kWinName = "Deep learning object detection in OpenCV";
-    // namedWindow(kWinName, WINDOW_NORMAL);
+
+    cap.open(cam_id);
+    if(!cap.isOpened()){
+        cout << "Cannot open camera with id: "<<cam_id<<endl;
+        return;
+    } 
     KalmanTracker ktr;
     // Process frames.
+    
+    // ktr.LoadConfig("./config.toml");
+    cout << ktr.histTreshold << ktr.maxNoMatch << ktr.maxPointsCount << ktr.tresholdDist << endl;
+    
+    auto start_s = std::chrono::steady_clock::now();
     auto time = getTickCount();
     while (waitKey(1) < 0)
     {
@@ -215,37 +176,34 @@ int process_camera(int argc, char** argv) {
         net.forward(outs, getOutputsNames(net));
         
         auto duration = std::chrono::duration_cast<chrono::milliseconds>(std::chrono::steady_clock::now() - start);
-        cout << "Time on forwarding: " << duration.count() << endl;
+        // cout << "Time on forwarding: " << duration.count() << endl;
         // Remove the bounding boxes with low confidence
         auto dets = postprocess(frame, outs);
-        cout << "Detected:\n";
-        for (auto d:dets) {
-            cout << d.bbox << endl;
-        }
         // Put efficiency information. The function getPerfProfile returns the overall time for inference(t) and the timings for each of the layers(in layersTimes)
         vector<double> layersTimes;
         double freq = getTickFrequency() / 1000;
         double t = net.getPerfProfile(layersTimes) / freq;
         auto now = getTickCount();
         double dtime =  (now - time)/getTickFrequency();
-        cout <<"TIME: "<<dtime<<endl;
-        ktr.Update(dets, frame,  dtime);
-        string label = format("Inference time for a frame : %.2f ms", t);
+        time = now;
+        // cout <<"TIME: "<<dtime<<endl;
+        auto dduration = std::chrono::duration_cast<chrono::milliseconds>(std::chrono::steady_clock::now() - start);
+        // cout << format("dduration: %d ms\n", dduration.count());
+        ktr.Update(dets, frame,  1.0/* dtime */);
+        string label = format("Inference time for a frame : %.2f ms|| overall duration %d", t, dduration.count());
         putText(frame, label, Point(0, 15), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0, 0, 255));
         
         // Write the frame with the detection boxes
         Mat detectedFrame;
         frame.convertTo(detectedFrame, CV_8U);
         // if (parser.has("image")) imwrite(outputFile, detectedFrame);
-        // else video.write(detectedFrame);
+        drawDets(dets, detectedFrame);
         ktr.DrawCV(detectedFrame);
         
+        video.write(detectedFrame);
         imshow("test", detectedFrame);
     }
     cap.release();
-    if (!parser.has("image")) video.release();
-
-    return 0;
 }
 
 // Get the names of the output layers
@@ -299,7 +257,6 @@ void process_video(string vid, string modelConfiguration , string modelWeights) 
     vid.replace(vid.end()-4, vid.end(), "_out.avi");
     outputFile = vid;
     video.open(outputFile, VideoWriter::fourcc('M','J','P','G'), 28, Size(cap.get(CAP_PROP_FRAME_WIDTH), cap.get(CAP_PROP_FRAME_HEIGHT)));
-
     KalmanTracker ktr;
     // Process frames.
     
@@ -379,21 +336,26 @@ int main(int argc, char** argv)
     }
     //input cofiguration
     try {
-        camera_id = config["input"]["camera_id"].as_integer();
+        if (config.at("input").contains("video")) {
+            auto vid_path = config["input"]["video"].as_string();
+            try {
+                process_video(vid_path, yolo_cfg, yolo_weights);
+            } catch (const exception &e) {
+                cout << e.what() << endl;
+                return -1;
+            }
+        } else if (config.at("input").contains("camera_id")) {
+            auto cam_id = config["input"]["camera_id"].as_integer();
+             try {
+                process_camera(cam_id, yolo_cfg, yolo_weights);
+            } catch (const exception &e) {
+                cout << e.what() << endl;
+                return -1;
+            }
+        }
     } catch(const exception &e) {
-        cout << "Cannot parse data from "<<config_s <<" [input].camera_id! Check your syntax: ";
+        cout << "Cannot parse data from "<<config_s <<" [input]! Check your syntax: ";
         cout << e.what() << endl;
         return -1;
     }
-    string vid_path = "";
-    if (config.at("input").contains("video")) {
-        vid_path = config["input"]["video"].as_string();
-    }
-    //tracker cofiguration
-
-    cv::Vec2i v(1,1);
-    // Line l1(0,0,5,5);
-    // Line l2(0,5,5,0);
-    // cout << boolalpha << l1.CrossedInDirection(l2) << endl;
-    process_video(vid_path, yolo_cfg, yolo_weights);
 }
