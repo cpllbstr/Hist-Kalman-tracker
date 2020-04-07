@@ -8,6 +8,7 @@
 #include <kalman_tracker.hpp>
 #include <toml.hpp>
 #include <opencv2/opencv.hpp>
+#include <MJPEGWriter.h>
 
 const char* keys =
 "{help h usage ? | | Usage examples: \n\t\t./object_detection_yolo.out --image=dog.jpg \n\t\t./object_detection_yolo.out --video=run_sm.mp4}"
@@ -147,6 +148,7 @@ void process_camera(int cam_id, string modelConfiguration , string modelWeights)
         return;
     } 
     KalmanTracker ktr;
+    MJPEGWriter video_chan(50051);
     // Process frames.
     
     // ktr.LoadConfig("./config.toml");
@@ -201,6 +203,7 @@ void process_camera(int cam_id, string modelConfiguration , string modelWeights)
         ktr.DrawCV(detectedFrame);
         
         video.write(detectedFrame);
+        video_chan.write(detectedFrame);
         imshow("test", detectedFrame);
     }
     cap.release();
